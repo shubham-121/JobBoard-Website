@@ -8,12 +8,12 @@ import avatar from "../../../images/homepage/avatar.avif";
 //like login,signup routes, for easy naviagtion across the app
 
 import { useState } from "react";
-// import { useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 export default function ParentHeader() {
   const [hover, setHover] = useState(false);
 
-  //   const navigate = useNavigate();
+  const navigate = useNavigate();
   return (
     <div className="flex flex-wrap ">
       <section className="relative mx-auto">
@@ -47,7 +47,7 @@ export default function ParentHeader() {
               </li>
               <li>
                 <button
-                  onClick={() => navigate("/profile")}
+                  // onClick={() => navigate("/profile")}
                   className="hover:text-gray-200"
                 >
                   Find Work
@@ -55,7 +55,7 @@ export default function ParentHeader() {
               </li>
               <li>
                 <button
-                  onClick={() => navigate("/postrides")}
+                  // onClick={() => navigate("/postrides")}
                   className="hover:text-gray-200"
                 >
                   For Employers
@@ -64,10 +64,19 @@ export default function ParentHeader() {
 
               <li>
                 <button
-                  onClick={() => navigate("/getrides")}
+                  // onClick={() => navigate("/dashboard")}
                   className="hover:text-gray-200"
                 >
                   Dashboard
+                </button>
+              </li>
+
+              <li>
+                <button
+                  onClick={() => navigate("/login")}
+                  className="hover:text-gray-200"
+                >
+                  LogIn
                 </button>
               </li>
               {/* <li>
