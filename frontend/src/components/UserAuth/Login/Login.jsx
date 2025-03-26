@@ -5,6 +5,8 @@ import { Outlet, useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import fetchRequest from "../../Utils/fetchRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { setAccessToken } from "../../../Redux/Slices/authSlice";
 // import { useDispatch, useSelector } from "react-redux";
 // import {
 //   clearErrorMessage,
@@ -27,12 +29,12 @@ export default function LogIn() {
   //   const { isNotification, notificationMessage, isError, errorMessage } =
   //     useSelector((store) => store.notification);
 
-  //   const { isAuthenticated, accessToken, refreshToken, authUserData } =
-  //     useSelector((store) => store.authentication);
+  const { isAuthenticated, access_Token, refresh_Token, authUserData } =
+    useSelector((store) => store.authentication);
 
   // console.log(isNotification, notificationMessage);
 
-  //   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   //   dispatch(setNotificationMessage("Notification state is working "));
 
@@ -125,7 +127,14 @@ export default function LogIn() {
         alert("error in creating the user in the DB");
       }
 
+      alert("user logged in successfully");
+
       console.log("USer created successfully in the Db", data);
+
+      //set the access token globally
+      dispatch(setAccessToken(data.token));
+
+      navigate("/");
     } catch (err) {
       console.error("Error in sending the request to backend\n", err.message);
     }

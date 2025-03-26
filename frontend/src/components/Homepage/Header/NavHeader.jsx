@@ -64,10 +64,10 @@ export default function ParentHeader() {
 
               <li>
                 <button
-                  // onClick={() => navigate("/dashboard")}
+                  onClick={() => navigate("/profile")}
                   className="hover:text-gray-200"
                 >
-                  Dashboard
+                  Profile
                 </button>
               </li>
 

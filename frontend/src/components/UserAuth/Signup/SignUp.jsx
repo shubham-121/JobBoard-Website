@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import SignUpForm from "./SignupForm";
 import fetchRequest from "../../Utils/fetchRequest";
+import { setAccessToken } from "../../../Redux/Slices/authSlice";
+import { useDispatch } from "react-redux";
 // import { useDispatch, useSelector } from "react-redux";
 // import {
 //   clearErrorMessage,
@@ -62,6 +64,8 @@ export default function SignUp() {
 
     // console.log(formData);
   }
+
+  const dispatch = useDispatch();
 
   //   async function handleOnSubmit(e) {
   //     e.preventDefault();
@@ -168,6 +172,9 @@ export default function SignUp() {
       }
 
       console.log("USer created successfully in the Db", data);
+      alert("user logged in successfully");
+      dispatch(setAccessToken(data.token));
+      navigate("/");
     } catch (err) {
       console.error("Error in sending the request to backend\n", err.message);
     }
