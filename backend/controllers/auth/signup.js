@@ -6,13 +6,13 @@ require("dotenv").config();
 async function userSignup(req, res) {
   const body = req.body;
 
-  const { name, email, phoneNumber, password, city } = body;
+  const { userRole, name, email, phoneNumber, password, city } = body;
 
   //1- form data validation
-  if (!name || !email || !phoneNumber || !password || !city) {
+  if (!userRole || !name || !email || !phoneNumber || !password || !city) {
     return res.status(400).json({
       message: "Complete Form Data Is Missing, Please Enter Full Form Data",
-      userData: { name, email, phoneNumber, password, city },
+      userData: { userRole, name, email, phoneNumber, password, city },
     });
   }
 
@@ -50,6 +50,7 @@ async function userSignup(req, res) {
       userPhoneNumber: phoneNumber,
       userPassword: hashpswd,
       userCity: city,
+      userRole: userRole,
     });
 
     if (!newUser) {
@@ -71,6 +72,7 @@ async function userSignup(req, res) {
       userName: name,
       userEmail: email,
       userPhoneNumber: phoneNumber,
+      userRole: userRole,
       token: jwt_token,
     });
   } catch (err) {

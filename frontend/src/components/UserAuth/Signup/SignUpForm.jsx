@@ -33,10 +33,22 @@ export default function SignUpForm({
           <form onSubmit={handleOnSubmit}>
             <div className=" flex flex-row justify-around">
               {/* onlick show green color on btn */}
-              <button className="border-custom font-semibold text-md text-gray-700 px-10 py-3 rounded-[8px] bg-green-500">
+              <button
+                type="button"
+                className="border-custom font-semibold text-md text-gray-700 px-10 py-3 rounded-[8px] bg-green-500"
+                name="userRole"
+                value="Recruiter"
+                onClick={handleFormChange}
+              >
                 👤Recruiter
               </button>
-              <button className="border-custom font-semibold text-md text-gray-700 px-10 py-3 rounded-[8px] bg-green-500">
+              <button
+                type="button"
+                className="border-custom font-semibold text-md text-gray-700 px-10 py-3 rounded-[8px] bg-green-500"
+                name="userRole"
+                value="Job Seeker"
+                onClick={handleFormChange}
+              >
                 🧑‍💼Job Seeker
               </button>
             </div>

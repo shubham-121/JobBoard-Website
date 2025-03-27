@@ -26,6 +26,11 @@ const userSignupSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    userRole: {
+      type: String,
+      required: true,
+      enum: ["Recruiter", "Job Seeker"],
+    },
   },
   { timestamps: true }
 );

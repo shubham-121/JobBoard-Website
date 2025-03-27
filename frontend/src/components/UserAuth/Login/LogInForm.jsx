@@ -1,13 +1,27 @@
-import { Outlet, Link } from "react-router";
+import { Outlet, Link, useNavigate } from "react-router";
 import job from "../../../images/auth/job-search.jpg";
+import { useSelector } from "react-redux";
+import Notification from "../../Utils/Notification";
+import { useEffect } from "react";
 
 export default function LogInForm({
   handleFormChange,
   handleOnSubmit,
   formData,
 }) {
+  const { isNotification, notificationMsg } = useSelector(
+    (store) => store.notification
+  );
+
+  const { access_token } = useSelector((store) => store.authentication);
+  const navigate = useNavigate();
+
   return (
     <div className="overflow-hidden">
+      {isNotification && (
+        <Notification message={notificationMsg}></Notification>
+      )}
+
       <Outlet></Outlet>
 
       <div className="bg-gray-100 flex justify-center items-center h-screen flex-row">
