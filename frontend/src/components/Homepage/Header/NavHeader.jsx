@@ -47,7 +47,7 @@ export default function ParentHeader() {
               </li>
               <li>
                 <button
-                  // onClick={() => navigate("/profile")}
+                  onClick={() => navigate("/findJobs")}
                   className="hover:text-gray-200"
                 >
                   Find Work

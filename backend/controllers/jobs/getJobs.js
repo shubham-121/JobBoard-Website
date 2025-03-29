@@ -2,21 +2,28 @@ const mongoose = require("mongoose");
 const Jobs = require("../../models/jobs/jobSchema");
 
 async function getJobs(req, res) {
-  const { jobtitle, location, keywords } = req.params;
-
-  console.log("User required job: ", jobtitle, location, keywords);
+  // const { jobtitle, location, keywords } = req.params;
+  const { jobtitle, location, keywords } = req.query;
+  console.log(
+    `User required job: jobtitle:${jobtitle}, location:${location}, keywords:${keywords}`,
+    jobtitle,
+    location,
+    keywords
+  );
 
   //creating a filter to query the Db
   const filter = {};
   //if jobtitle, get all jobs with same title as user entered
-  if (jobtitle) filter.jobTitle = jobtitle;
+  if (jobtitle) filter.jobTitle = { $regex: jobtitle, $options: "i" };
 
   //if location, get all jobs according to user location
-  if (location) filter.jobLocation = location;
+  if (location) filter.jobLocation = { $regex: location, $options: "i" };
 
   //if keywords, get all jobs accodring to the user keywords
   if (keywords)
     filter.jobSkillsRequired = { $regex: `${keywords}`, $options: "i" }; //match given keyword in the array of jobskillsrequired
+
+  console.log("The DB filter is:", filter);
 
   try {
     const allJobs = await Jobs.find(filter);

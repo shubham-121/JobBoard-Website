@@ -16,6 +16,7 @@ const verifyJwt = require("./controllers/auth/verifyJwt.js");
 // 2- jobs files
 const createJob = require("./controllers/jobs/createJob.js");
 const getJobs = require("./controllers/jobs/getJobs.js");
+const getJobDetails = require("./controllers/jobs/getJobDetails.js");
 
 //user files
 const userProfile = require("./controllers/user/profile.js");
@@ -39,7 +40,8 @@ app.get("/api/user/profile", verifyJwt, userProfile);
 
 //2- job posting route
 app.post("/api/jobs", createJob); //create a new job
-app.get("/api/jobs/:jobtitle?/:location?/:keywords?", getJobs); //get all jobs
+app.get("/api/jobs", getJobs); //get all jobs
+app.get("/api/jobs/:jobId", getJobDetails); //get individual job details
 
 // app.get("/api/jobs/:jobid");  //get individual job with job id
 
