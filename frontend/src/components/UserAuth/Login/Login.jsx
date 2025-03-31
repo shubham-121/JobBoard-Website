@@ -89,7 +89,8 @@ export default function LogIn() {
       console.log("USer created successfully in the Db", data);
 
       //set the access token globally
-      dispatch(setAccessToken(data.token));
+      // dispatch(setAccessToken(data.token));
+      dispatch(setAccessToken(data));
     } catch (err) {
       console.error("Error in sending the request to backend\n", err.message);
     }

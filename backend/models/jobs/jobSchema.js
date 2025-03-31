@@ -37,13 +37,33 @@ const jobSchema = mongoose.Schema(
       required: true,
     },
     jobApplicants: [
+      //refer to new schema (applicationsSchema)
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",
         // required: true,
       },
     ],
+
+    //optional extra fields
+    experienceRequired: {
+      type: String,
+      required: false,
+    }, // e.g., "2-5 years"
+    applicationDeadline: {
+      type: Date,
+      required: false,
+    }, // e.g., "2025-04-30"
+    hiringProcess: {
+      type: [String],
+      required: false,
+    }, // e.g., "Resume Screening -> Coding Test -> Interview"
+    jobBenefits: {
+      type: [String],
+      required: false,
+    }, // e.g., ["Health Insurance", "Paid Leave"]
   },
+
   { timestamps: true }
 );
 

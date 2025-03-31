@@ -1,11 +1,11 @@
 import ParentHeader from "../Homepage/Header/NavHeader";
-import JobSearchForm from "./JobSearchForm";
+import PostJobForm from "./PostJobForm";
 
-export default function JobSearch() {
+export default function PostJob() {
   return (
     <div>
       <ParentHeader></ParentHeader>
-      <JobSearchForm></JobSearchForm>
+      <PostJobForm></PostJobForm>
     </div>
   );
 }

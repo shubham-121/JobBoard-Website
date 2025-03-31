@@ -1,3 +1,5 @@
+//get individual job details here
+
 const mongoose = require("mongoose");
 const Jobs = require("../../models/jobs/jobSchema");
 

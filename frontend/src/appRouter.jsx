@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/Utils/ProtectedRoute";
 import JobSearch from "./components/Job Searching/JobSearch";
 import RenderJobData from "./components/Job Searching/RenderJobData";
 import JobDetails from "./components/Job Searching/JobDetails";
+import PostJob from "./components/JobPosting/PostJob";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
     ),
   },
 
+  //add protected component in future after completion
   {
     path: "/findJobs",
     element: <JobSearch></JobSearch>,
@@ -42,6 +44,15 @@ const router = createBrowserRouter([
     //     <JobSearch></JobSearch>
     //   </ProtectedRoute>
     // ),
+  },
+
+  {
+    path: "/postJob",
+    element: (
+      <ProtectedRoute>
+        <PostJob></PostJob>
+      </ProtectedRoute>
+    ),
   },
 
   {

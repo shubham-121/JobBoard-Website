@@ -13,11 +13,16 @@ const authSlice = createSlice({
   reducers: {
     setAccessToken(state, action) {
       console.log("Set access token reducer called: ", action.payload);
+      const { userId, token } = action.payload;
       state.isAuthenticated = true;
-      state.access_token = action.payload;
+      state.access_token = token;
       state.authUserData = action.payload;
 
-      console.log(" access token set: ", state.access_token);
+      console.log(
+        " access token set: ",
+        state.access_token,
+        state.authUserData
+      );
     },
 
     setRefreshToken(state, action) {
