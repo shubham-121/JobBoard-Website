@@ -9,6 +9,8 @@ export default function RenderJobData({ jobs }) {
 
   const navigate = useNavigate();
 
+  const jobPostedAgo = applicationDate(jobs.createdAt); //how many days ago job was posted
+
   return (
     <div className="bg-gray-100 py-4">
       {" "}
@@ -104,7 +106,8 @@ export default function RenderJobData({ jobs }) {
 
         {/* Posted Time */}
         <div className="text-gray-500 text-sm font-semibold text-right">
-          Posted {+applicationDate(jobs.updatedAt)}+ days ago
+          Posted{" "}
+          {jobPostedAgo === "Today" ? "Today" : `${jobPostedAgo}+ days ago`}
         </div>
       </div>
     </div>

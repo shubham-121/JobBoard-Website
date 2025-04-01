@@ -68,6 +68,7 @@ async function loginUser(req, res) {
       userPhoneNumber: searchUser.userPhoneNumber,
       token: jwt_token,
       userId: searchUser._id,
+      userRole: searchUser.userRole,
     });
   } catch (err) {
     console.error("Error in logging the user in:", err.message);

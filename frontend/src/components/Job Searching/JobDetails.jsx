@@ -1,10 +1,13 @@
-//show job details here
+//show the clicked  job details here
 
 import { useParams } from "react-router";
 import fetchRequest from "../Utils/fetchRequest";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import ParentHeader from "../Homepage/Header/NavHeader";
+import RenderJobDetails from "./RenderJobDetails";
 
 export default function JobDetails() {
+  const [jobData, setJobData] = useState(null);
   const params = useParams();
   const { jobId } = params;
   console.log(jobId);
@@ -23,6 +26,8 @@ export default function JobDetails() {
         }
 
         console.log("Individual job details data:", data);
+
+        setJobData(data);
       } catch (err) {
         console.error("Failed to get the individual job data", err.message);
         alert("Failed to get the individual job data");
@@ -31,7 +36,17 @@ export default function JobDetails() {
     getJobDetails();
   }, [jobId]);
 
-  return <div> This is the job detail page</div>;
+  return (
+    <div>
+      <ParentHeader></ParentHeader>
+      {jobData && (
+        <RenderJobDetails
+          jobData={jobData}
+          setJobData={setJobData}
+        ></RenderJobDetails>
+      )}
+    </div>
+  );
 }
 
 //work on this. Backend is sending data completely fine. Just render it now here

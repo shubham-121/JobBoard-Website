@@ -37,13 +37,12 @@ const router = createBrowserRouter([
   //add protected component in future after completion
   {
     path: "/findJobs",
-    element: <JobSearch></JobSearch>,
-
-    // element: (
-    //   <ProtectedRoute>
-    //     <JobSearch></JobSearch>
-    //   </ProtectedRoute>
-    // ),
+    element: (
+      <ProtectedRoute>
+        <JobSearch></JobSearch>
+      </ProtectedRoute>
+    ),
+    // element: <JobSearch></JobSearch>,
   },
 
   {

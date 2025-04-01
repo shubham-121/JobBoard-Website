@@ -3,9 +3,6 @@ const Jobs = require("../../models/jobs/jobSchema");
 async function createJob(req, res) {
   const body = req.body;
 
-  // const user = req.user;
-  // console.log("user from post job route:", user);
-
   const {
     jobTitle,
     jobDescription,

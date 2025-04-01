@@ -249,6 +249,32 @@ function PostForm() {
           />
         </div>
 
+        {/* <div>
+          <label className="block font-medium mb-1">Job Openings</label>
+          <input
+            type="text"
+            name="jobBenefits"
+            placeholder="E.g., Health Insurance, Remote Work"
+            value={formData.jobBenefits}
+            onChange={handleFormChange}
+            required
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium mb-1">Job Category</label>
+          <input
+            type="text"
+            name="jobBenefits"
+            placeholder="E.g., Health Insurance, Remote Work"
+            value={formData.jobBenefits}
+            onChange={handleFormChange}
+            required
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+        </div> */}
+
         {/* Submit Button */}
         <button
           type="submit"
