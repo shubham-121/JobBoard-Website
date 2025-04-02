@@ -3,6 +3,7 @@ import fetchRequest from "../Utils/fetchRequest";
 import LoadingIndicator from "../Utils/LoadingIndicator";
 import RenderJobData from "./RenderJobData";
 import { useNavigate } from "react-router";
+import Pagination from "./Pagination";
 
 export default function JobSearchForm() {
   return (
@@ -83,6 +84,20 @@ function SearchForm() {
       setIsLoading(false);
     }
   }
+
+  //pagination concept
+  const [curPage, setCurPage] = useState(1);
+  const [perPage, setPerPage] = useState(6);
+
+  let lastPostIndx = curPage * perPage;
+  let firstPostIndx = lastPostIndx - perPage;
+
+  let curPostsPerPage = jobData?.searchedJobs.slice(
+    firstPostIndx,
+    lastPostIndx
+  );
+  console.log("Current posts per page", curPostsPerPage);
+
   return (
     <div className="flex flex-col items-center">
       {/* Form Container */}
@@ -173,8 +188,9 @@ function SearchForm() {
       {/* Loading Indicator */}
       {isLoading && <LoadingIndicator />}
 
+      {/* without using pagination */}
       {/* Job Results Container (Separate from Form) */}
-      {jobData?.searchedJobs.length > 0 && (
+      {/* {jobData?.searchedJobs.length > 0 && (
         <div className="mt-10 w-full max-w-2xl">
           <h3 className="text-2xl font-semibold mb-4 text-gray-900 text-center">
             {jobData?.searchedJobs?.length
@@ -187,7 +203,33 @@ function SearchForm() {
             ))}
           </div>
         </div>
+      )} */}
+
+      {/*using  pagination */}
+      {curPostsPerPage?.length > 0 && (
+        <div className="mt-10 w-full max-w-2xl">
+          <h3 className="text-2xl font-semibold mb-4 text-gray-900 text-center">
+            {curPostsPerPage?.length
+              ? `${jobData?.searchedJobs?.length} Jobs Found For You`
+              : "No jobs Found😔"}
+          </h3>
+          <div className="space-y-4">
+            {curPostsPerPage.map((job, index) => (
+              <>
+                <RenderJobData jobs={job} key={index} />
+              </>
+            ))}
+          </div>
+        </div>
       )}
+
+      {/* this displays the page nummbers in the bottom */}
+      <Pagination
+        totalPosts={jobData?.searchedJobs.length}
+        postPerPage={perPage}
+        setCurPage={setCurPage}
+        curPage={curPage}
+      ></Pagination>
     </div>
   );
 }

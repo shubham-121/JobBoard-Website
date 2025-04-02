@@ -36,6 +36,8 @@ function PostForm() {
     jobBenefits: "",
   });
 
+  const { access_token } = useSelector((store) => store.authentication);
+
   console.log("Authenticated user data: ", authUserData);
 
   function handleFormChange(e) {
@@ -62,6 +64,7 @@ function PostForm() {
         "POST",
         {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
         },
 
         JSON.stringify(formData)

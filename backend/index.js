@@ -1,5 +1,11 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
+const fs = require("fs");
+
+const multer = require("multer");
+// const upload = multer({ dest: "uploads/" });
+
 require("dotenv").config();
 
 const connectToDB = require("./connection.js");
@@ -20,6 +26,7 @@ const getJobDetails = require("./controllers/jobs/getJobDetails.js");
 
 //apply job file
 const applyJob = require("./controllers/jobs/applyJob.js");
+const uploadResume = require("./controllers/jobs/uploadResume.js");
 
 //user files
 const userProfile = require("./controllers/user/profile.js");
@@ -49,7 +56,27 @@ app.get("/api/jobs/:jobId", getJobDetails); //get individual job details
 //3- job apply /save route
 app.post("/api/jobs/apply", verifyJwt, applyJob);
 
-// app.get("/api/jobs/:jobid");  //get individual job with job id
+//separate this logic for file upload tomorrow
+// 4- upload resume route
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    return cb(null, __dirname + "/uploads");
+  },
+  filename: function (req, file, cb) {
+    const fileExtension = file.mimetype.split("/")[1]; //check file type (file extension)
+    return cb(null, Date.now() + "." + fileExtension);
+  },
+});
+
+const upload = multer({ storage });
+
+app.post("/api/jobs/apply/resume", upload.single("resume"), (req, res) => {
+  console.log("Req body:", req.body);
+  console.log("Req file:", req.file);
+});
+
+// app.post("/api/jobs/apply/resume", upload.single("resume"), uploadResume);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Backend is running on port:${PORT}`));

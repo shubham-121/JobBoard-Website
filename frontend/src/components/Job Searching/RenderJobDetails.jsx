@@ -11,12 +11,15 @@ import {
 import { useState } from "react";
 import LoadingIndicator from "../Utils/LoadingIndicator";
 import Notification from "../Utils/Notification";
+import UploadResume from "./UploadResume";
 
 export default function RenderJobDetails({ jobData, setJobData }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isApplying, setIsApplying] = useState(false); //for checking whether user is applying or not
   const [isApplied, setIsApplied] = useState(false); //for rendering the apply button conditionally
+  const [isUpload, setIsUpload] = useState(false); //for handling the resume upload of the user
+
   //1-job id
   const { jobId } = useParams();
   //2-applicant id ->current user who is logged in
@@ -39,6 +42,10 @@ export default function RenderJobDetails({ jobData, setJobData }) {
 
   async function handleApplyJob(e) {
     e.preventDefault();
+
+    //Resume upload    testing
+    setIsUpload(true);
+    return;
 
     //1-first check user role, only job seeker is allowed to apply to the job
     if (authUserData.userRole === "Recruiter") {
@@ -124,6 +131,16 @@ export default function RenderJobDetails({ jobData, setJobData }) {
       {isNotification && (
         <Notification message={notificationMsg}></Notification>
       )}
+
+      {/* conditionaly render a form for resume upload */}
+      <div className="flex  justify-center fixed translate-0.5 top-5 left-1/2 -translate-x-1/2">
+        {isUpload && (
+          <UploadResume
+            isUpload={isUpload}
+            setIsUpload={setIsUpload}
+          ></UploadResume>
+        )}
+      </div>
 
       <div className="border border-gray-400 shadow-lg p-6 rounded-lg bg-white max-w-4xl mx-auto mt-6">
         {/* First Row */}
@@ -258,4 +275,4 @@ export default function RenderJobDetails({ jobData, setJobData }) {
   );
 }
 
-//check verifyjwt , it is not working for apply job route
+//tomorrow task- work on resume upload, application tracking
