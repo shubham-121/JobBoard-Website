@@ -1,6 +1,6 @@
 export default function Notification({ message }) {
   return (
-    <div className="flex max-w-md bg-white shadow-lg rounded-lg overflow-hidden fixed top-1 left-1/2 transform -translate-x-1/2">
+    <div className="flex max-w-md bg-white shadow-lg rounded-lg overflow-hidden fixed top-1 left-1/2 transform -translate-x-1/2 z-50">
       <div className="w-2 bg-gray-800"></div>
       <div className="flex items-center px-2 py-3">
         <img

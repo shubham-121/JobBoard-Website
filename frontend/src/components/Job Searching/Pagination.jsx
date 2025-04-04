@@ -19,6 +19,7 @@ export default function Pagination({
     <div className="flex justify-center items-center gap-2 flex-row   font-medium ">
       {pages.map((page, indx) => (
         <button
+          key={indx}
           className={`px-3 py-1 border-2 border-gray-400 ${
             curPage === page
               ? "bg-blue-400 text-white"

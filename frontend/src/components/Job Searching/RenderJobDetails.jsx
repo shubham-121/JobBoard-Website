@@ -16,7 +16,7 @@ import UploadResume from "./UploadResume";
 export default function RenderJobDetails({ jobData, setJobData }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isApplying, setIsApplying] = useState(false); //for checking whether user is applying or not
+  const [isApplying, setIsApplying] = useState(false); //for checking whether user is actively presently applying or not
   const [isApplied, setIsApplied] = useState(false); //for rendering the apply button conditionally
   const [isUpload, setIsUpload] = useState(false); //for handling the resume upload of the user
 
@@ -45,7 +45,7 @@ export default function RenderJobDetails({ jobData, setJobData }) {
 
     //Resume upload    testing
     setIsUpload(true);
-    return;
+    // return;
 
     //1-first check user role, only job seeker is allowed to apply to the job
     if (authUserData.userRole === "Recruiter") {
@@ -55,14 +55,21 @@ export default function RenderJobDetails({ jobData, setJobData }) {
     //2-check if any mandatory field for  applying job is missing OR return to log in page  if user is not logged in and directly clicks apply button
     //prettier-ignore
     if (!access_token || (!jobId || !applicantId || !recruiterId || !jobTitle || !jobCompany)) {
-      navigate("/login");
       //prettier-ignore
       dispatch(setNotification("Please login before applying"));
+
+      navigate("/login");
+
       setTimeout(() => {
         dispatch(clearNotification());
       }, 2500);
+
+
       return;
     }
+
+    //3-show resume upload box first
+    setIsUpload(true);
 
     setIsApplying(true);
 
@@ -72,6 +79,8 @@ export default function RenderJobDetails({ jobData, setJobData }) {
       recruiterId: recruiterId,
       jobTitle: jobTitle,
       jobCompany: jobCompany,
+
+      //resume upload
     };
 
     try {
@@ -108,6 +117,7 @@ export default function RenderJobDetails({ jobData, setJobData }) {
 
       //first time applying is success
       if (data.status === "Success") {
+        //wait for resume upload here first then proceed further
         setIsApplying(false);
         setIsApplied(true);
 
@@ -132,9 +142,9 @@ export default function RenderJobDetails({ jobData, setJobData }) {
         <Notification message={notificationMsg}></Notification>
       )}
 
-      {/* conditionaly render a form for resume upload */}
+      {/* conditionaly render a form for resume upload only if user is logged in */}
       <div className="flex  justify-center fixed translate-0.5 top-5 left-1/2 -translate-x-1/2">
-        {isUpload && (
+        {isUpload && access_token && (
           <UploadResume
             isUpload={isUpload}
             setIsUpload={setIsUpload}
