@@ -7,7 +7,12 @@ import {
   setNotification,
 } from "../../Redux/Slices/notificationSlice";
 
-export default function UploadResume({ isUpload, setIsUpload }) {
+export default function UploadResume({
+  isUpload,
+  setIsUpload,
+  resumeURL,
+  setResumeURL,
+}) {
   let [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false); //for uploading notification
   const { access_token } = useSelector((store) => store.authentication);
@@ -58,6 +63,7 @@ export default function UploadResume({ isUpload, setIsUpload }) {
 
       console.log("Resume successfully uploaded", data);
       // setIsUploading(false);
+      setResumeURL(data.resume_url);
 
       //show resume upload success notification
       dispatch(setNotification("You have Successfully applied to the job"));
@@ -66,12 +72,15 @@ export default function UploadResume({ isUpload, setIsUpload }) {
         dispatch(clearNotification());
       }, 2000);
 
+      return data.resume_url; //use this in before sending apply job request in RenderJobDetails
+
       // alert("Resume successfully uploaded");
     } catch (err) {
       console.error("Error in uploading the file", err.message);
       setIsUploading(false);
 
       alert(`Upload failed: ${err.message}`);
+      return null;
     }
   }
   return (

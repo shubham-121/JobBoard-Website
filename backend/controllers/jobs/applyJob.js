@@ -5,11 +5,19 @@ const Applicant = require("../../models/ApplicantSchema/applicantSchema");
 async function applyJob(req, res) {
   const body = req.body;
 
-  const { jobId, applicantId, recruiterId, jobTitle, jobCompany } = body;
+  const { jobId, applicantId, recruiterId, jobTitle, jobCompany, resumeUrl } =
+    body;
 
   console.log("Job applicant apply data", body);
 
-  if (!jobId || !applicantId || !recruiterId || !jobTitle || !jobCompany) {
+  if (
+    !jobId ||
+    !applicantId ||
+    !recruiterId ||
+    !jobTitle ||
+    !jobCompany ||
+    !resumeUrl
+  ) {
     return res.status(400).json({
       message: "Error in applying, some fields are missing",
       status: "Error",
@@ -41,6 +49,7 @@ async function applyJob(req, res) {
       recruiterId: recruiterId,
       jobTitle: jobTitle,
       jobCompany: jobCompany,
+      resumeUrl: resumeUrl,
     });
 
     if (!newApplication) {

@@ -8,17 +8,21 @@ import {
   clearNotification,
   setNotification,
 } from "../../Redux/Slices/notificationSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoadingIndicator from "../Utils/LoadingIndicator";
 import Notification from "../Utils/Notification";
 import UploadResume from "./UploadResume";
+import useApplicationsCount from "../Utils/custom hooks/useApplicationsCount";
 
 export default function RenderJobDetails({ jobData, setJobData }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isApplying, setIsApplying] = useState(false); //for checking whether user is actively presently applying or not
-  const [isApplied, setIsApplied] = useState(false); //for rendering the apply button conditionally
-  const [isUpload, setIsUpload] = useState(false); //for handling the resume upload of the user
+
+  // Tracks whether the user is currently in the process of submitting a job application (used to show loading indicators or disable actions during the process)
+  const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
+  const [hasAppliedBefore, setHasAppliedBefore] = useState(false); //for rendering the apply button conditionally
+  const [showResumeUploadBox, setShowResumeUploadBox] = useState(false); //for handling the resume upload of the user
+  const [resumeURL, setResumeURL] = useState(""); //  this stores the uploaded resume URL
 
   //1-job id
   const { jobId } = useParams();
@@ -31,28 +35,19 @@ export default function RenderJobDetails({ jobData, setJobData }) {
   );
   const applicantId = authUserData.userId;
 
-  //3-recruiter id ->who posted the job
+  //3-recruiter id ->who posted the job;    //4- jobTitle and jobCompany for faster querying
   const recruiterId = jobData.searchedJobs.jobPostedBy;
-  //4- jobTitle and jobCompany for faster querying
   const jobTitle = jobData.searchedJobs.jobTitle;
   const jobCompany = jobData.searchedJobs.jobCompany;
 
-  //   console.log(jobData);
-  console.log(access_token);
+  // console.log(access_token);
+  const { count: totalApplicantsCount } = useApplicationsCount(jobId);
+  console.log("Total applicants count", totalApplicantsCount);
 
   async function handleApplyJob(e) {
     e.preventDefault();
 
-    //Resume upload    testing
-    setIsUpload(true);
-    // return;
-
-    //1-first check user role, only job seeker is allowed to apply to the job
-    if (authUserData.userRole === "Recruiter") {
-      alert("Only job seekers can apply");
-      return;
-    }
-    //2-check if any mandatory field for  applying job is missing OR return to log in page  if user is not logged in and directly clicks apply button
+    //1-check if any mandatory field for  applying job is missing OR return to log in page  if user is not logged in and directly clicks apply button
     //prettier-ignore
     if (!access_token || (!jobId || !applicantId || !recruiterId || !jobTitle || !jobCompany)) {
       //prettier-ignore
@@ -64,92 +59,100 @@ export default function RenderJobDetails({ jobData, setJobData }) {
         dispatch(clearNotification());
       }, 2500);
 
-
-      return;
-    }
-
-    //3-show resume upload box first
-    setIsUpload(true);
-
-    setIsApplying(true);
-
-    const applicantData = {
-      jobId: jobId,
-      applicantId: applicantId,
-      recruiterId: recruiterId,
-      jobTitle: jobTitle,
-      jobCompany: jobCompany,
-
-      //resume upload
-    };
-
-    try {
-      const data = await fetchRequest(
-        "/api/jobs/apply",
-        "POST",
-        {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`,
-        },
-        JSON.stringify(applicantData)
-      );
-
-      if (!data) {
-        console.error("Failed to apply at the job", data);
-        alert("Failed to apply at the job");
-        setIsApplying(false);
+      //2-first check user role, only job seeker is allowed to apply to the job
+      if (authUserData.userRole === "Recruiter") {
+        alert("Only job seekers can apply");
         return;
       }
 
-      console.log("Applied to job successfully", data);
-
-      //if user already applied to the job before or fetch this using useEffect on intial mount
-      if (data.status === "Already Applied") {
-        setIsApplying(false);
-        setIsApplied(true);
-
-        dispatch(setNotification("You Have Already Applied To The Job"));
-
-        setTimeout(() => {
-          dispatch(clearNotification());
-        }, 3000);
-      }
-
-      //first time applying is success
-      if (data.status === "Success") {
-        //wait for resume upload here first then proceed further
-        setIsApplying(false);
-        setIsApplied(true);
-
-        dispatch(setNotification("Successfully applied to the job"));
-
-        setTimeout(() => {
-          dispatch(clearNotification());
-        }, 3000);
-      }
-
-      //show apply notification
-    } catch (err) {
-      console.error("Failed to apply at the job", err.message);
-      alert("Failed to apply at the job");
-      setIsApplying(false);
     }
+
+    setShowResumeUploadBox(true); //open modal first
   }
+
+  useEffect(() => {
+    if (!resumeURL) return;
+
+    console.log("Resume url set after file upload to cloud", resumeURL);
+
+    async function applyToJob() {
+      setIsSubmittingApplication(true);
+
+      const applicantData = {
+        jobId,
+        applicantId,
+        recruiterId,
+        jobTitle,
+        jobCompany,
+        resumeUrl: resumeURL,
+      };
+      console.log("Resume url set after applicantdata", resumeURL);
+
+      try {
+        const data = await fetchRequest(
+          "/api/jobs/apply",
+          "POST",
+          {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+          JSON.stringify(applicantData)
+        );
+
+        if (!data) {
+          console.error("Failed to apply at the job");
+          alert("Failed to apply at the job");
+          return;
+        }
+
+        if (data.status === "Already Applied") {
+          setHasAppliedBefore(true);
+          // setShowResumeUploadBox(false); //dont allow resume upload
+
+          dispatch(setNotification("You Have Previously Applied To The Job"));
+        } else if (data.status === "Success") {
+          setHasAppliedBefore(true);
+          dispatch(setNotification("Successfully applied to the job"));
+        }
+
+        // Hide upload box after submission
+        setShowResumeUploadBox(false);
+        // Optional: reset resume URL so this useEffect doesn't run again by accident
+        setResumeURL("");
+      } catch (err) {
+        console.error("Error applying:", err.message);
+        alert("Something went wrong");
+      } finally {
+        setIsSubmittingApplication(false);
+      }
+    }
+
+    applyToJob();
+  }, [resumeURL]); // 👈 Runs only when resumeURL changes
+
   return (
     <div>
-      {/* {isApplying && <LoadingIndicator msg={"Applying..."}></LoadingIndicator>} */}
+      {/* {isSubmittingApplication && <LoadingIndicator msg={"Applying..."}></LoadingIndicator>} */}
       {isNotification && (
         <Notification message={notificationMsg}></Notification>
       )}
 
       {/* conditionaly render a form for resume upload only if user is logged in */}
-      <div className="flex  justify-center fixed translate-0.5 top-5 left-1/2 -translate-x-1/2">
-        {isUpload && access_token && (
+      <div className="flex justify-center fixed translate-0.5 top-5 left-1/2 -translate-x-1/2">
+        {access_token && showResumeUploadBox && (
           <UploadResume
-            isUpload={isUpload}
-            setIsUpload={setIsUpload}
-          ></UploadResume>
+            resumeURL={resumeURL}
+            setResumeURL={setResumeURL}
+            showResumeUploadBox={showResumeUploadBox}
+            setShowResumeUploadBox={setShowResumeUploadBox}
+          />
         )}
+
+        {/* {access_token && !showResumeUploadBox && hasAppliedBefore && (
+          <p className="text-red-600 font-semibold bg-white px-4 py-2 rounded shadow">
+            You have already applied to this job.
+          </p>
+        )} */}
       </div>
 
       <div className="border border-gray-400 shadow-lg p-6 rounded-lg bg-white max-w-4xl mx-auto mt-6">
@@ -170,7 +173,9 @@ export default function RenderJobDetails({ jobData, setJobData }) {
             <div className="inline-flex items-center border-x-[1.5px] border-gray-300 px-3 h-6">
               YOE: {jobData.searchedJobs.experienceRequired}+ years
             </div>
-            <div className="inline-flex items-center px-3 h-6">10 LPA</div>
+            <div className="inline-flex items-center px-3 h-6">
+              {jobData.searchedJobs.jobSalary} LPA
+            </div>
             <div className="inline-flex items-center border-x-[1.5px] border-gray-300 px-3 h-6">
               📍 {jobData.searchedJobs.jobLocation}
             </div>
@@ -189,7 +194,7 @@ export default function RenderJobDetails({ jobData, setJobData }) {
             <p>
               Applicants:{" "}
               <span className="font-medium">
-                {jobData.searchedJobs.jobApplicants.length}
+                {totalApplicantsCount ? totalApplicantsCount : "-"}
               </span>
             </p>
           </div>
@@ -198,16 +203,18 @@ export default function RenderJobDetails({ jobData, setJobData }) {
           <div className="space-x-6 space-y-2">
             <button
               className={`py-2 px-6 rounded-md transition duration-200 ${
-                isApplied
+                hasAppliedBefore
                   ? "bg-gray-500 text-white cursor-not-allowed" // Disabled styling
                   : "bg-blue-600 text-white hover:bg-blue-700"
               }`}
               onClick={
-                isApplied ? () => alert("Already applied") : handleApplyJob
+                hasAppliedBefore
+                  ? () => alert("Already applied")
+                  : handleApplyJob
               }
-              disabled={isApplied} // Disables button when true
+              disabled={hasAppliedBefore} // Disables button when true
             >
-              {isApplied ? "Applied" : "Apply"}
+              {hasAppliedBefore ? "Applied" : "Apply"}
             </button>
 
             <button className="bg-gray-200 text-gray-800 py-2 px-7 rounded-md hover:bg-gray-300 transition duration-200">

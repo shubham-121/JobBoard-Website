@@ -23,6 +23,7 @@ const verifyJwt = require("./controllers/auth/verifyJwt.js");
 const createJob = require("./controllers/jobs/createJob.js");
 const getJobs = require("./controllers/jobs/getJobs.js");
 const getJobDetails = require("./controllers/jobs/getJobDetails.js");
+const getApplicationCount = require("./controllers/jobs/getApplicationCount.js");
 
 //apply job file (multer)
 const applyJob = require("./controllers/jobs/applyJob.js");
@@ -65,6 +66,11 @@ app.post(
   upload.single("resume"),
   uploadResume
 );
+
+//5- get the job applicant count route
+app.get("/api/jobs/:jobId/applicants", getApplicationCount);
+//6- check if user has already applied
+app.get("/api/jobs/:jobId/has-applied");
 
 // app.post("/api/jobs/apply/resume", upload.single("resume"), uploadResume);
 
