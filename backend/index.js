@@ -24,12 +24,18 @@ const createJob = require("./controllers/jobs/createJob.js");
 const getJobs = require("./controllers/jobs/getJobs.js");
 const getJobDetails = require("./controllers/jobs/getJobDetails.js");
 const getApplicationCount = require("./controllers/jobs/getApplicationCount.js");
+const getHasUserApplied = require("./controllers/jobs/getHasUserApplied.js");
 
 //apply job file (multer)
 const applyJob = require("./controllers/jobs/applyJob.js");
 
 const upload = require("./controllers/jobs/multer/multerConfig.js");
 const uploadResume = require("./controllers/jobs/multer/uploadResume.js");
+
+//save jobs files
+const checkJobSaved = require("./controllers/jobs/SaveJobs/checkJobSaved.js");
+const saveJob = require("./controllers/jobs/SaveJobs/saveJob.js");
+const unsaveJob = require("./controllers/jobs/SaveJobs/unsaveJob.js");
 
 //user files
 const userProfile = require("./controllers/user/profile.js");
@@ -48,18 +54,12 @@ app.get("/", (req, res) => {
 //1- user login/signup route
 app.post("/api/auth/signup", userSignup);
 app.post("/api/auth/login", loginUser);
-
 app.get("/api/user/profile", verifyJwt, userProfile);
 
-//2- job posting route
-app.post("/api/jobs", verifyJwt, createJob); //create a new job
-app.get("/api/jobs", getJobs); //get all jobs
-app.get("/api/jobs/:jobId", getJobDetails); //get individual job details
-
-//3- job apply /save route
+//2- job apply /save route
 app.post("/api/jobs/apply", verifyJwt, applyJob);
 
-//4- upload resume route
+//3- upload resume route
 app.post(
   "/api/jobs/apply/resume",
   verifyJwt,
@@ -67,12 +67,20 @@ app.post(
   uploadResume
 );
 
-//5- get the job applicant count route
+//4- get the job applicant count route
 app.get("/api/jobs/:jobId/applicants", getApplicationCount);
-//6- check if user has already applied
-app.get("/api/jobs/:jobId/has-applied");
+//5- check if user has already applied
+app.get("/api/applications/hasApplied", getHasUserApplied);
 
-// app.post("/api/jobs/apply/resume", upload.single("resume"), uploadResume);
+//6- save job for users
+app.get("/api/jobs/checkJobSaved", verifyJwt, checkJobSaved);
+app.post("/api/jobs/saveJob", verifyJwt, saveJob);
+app.delete("/api/jobs/unsave", verifyJwt, unsaveJob);
+
+//7- job posting route
+app.post("/api/jobs", verifyJwt, createJob); //create a new job
+app.get("/api/jobs", getJobs); //get all jobs
+app.get("/api/jobs/:jobId", getJobDetails); //get individual job details
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Backend is running on port:${PORT}`));

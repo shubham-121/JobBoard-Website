@@ -1,11 +1,16 @@
-//check whether user has already applied or not
+//check whether user has already applied or not to the job then use this hook to conditionally show the upload resume box
 
 import { useEffect, useState } from "react";
 import fetchRequest from "../fetchRequest";
+import { useSelector } from "react-redux";
 
 export default function useHasUserApplied(userId, jobId) {
+  console.log("useHasUserApplied", userId, jobId);
+
   const [userHasAlreadyApplied, setHasAlreadyApplied] = useState(null);
   const [isChecking, setIsChecking] = useState(true);
+
+  const { access_token } = useSelector((store) => store.authentication);
 
   useEffect(() => {
     async function hasAlreadyApplied() {
@@ -13,12 +18,20 @@ export default function useHasUserApplied(userId, jobId) {
 
       try {
         const data = await fetchRequest(
-          `/api/jobs/${jobId}/has-applied?userId=${userId}`,
+          `/api/applications/hasApplied?userId=${userId}&jobId=${jobId}`,
           "GET",
-          { "Content-Type": "application/json" }
+          {
+            "Content-Type": "application/json",
+            // Authorization: `Bearer ${access_token}`,
+          }
         );
 
-        setHasAlreadyApplied(data?.hasAlreadyApplied || false);
+        if (data.hasAppliedStatus) {
+          //already applied
+          setHasAlreadyApplied(true);
+        } else {
+          setHasAlreadyApplied(false);
+        }
         console.log("user has already applied:", data);
       } catch (err) {
         console.error("Error checking application status:", err.message);
@@ -28,7 +41,7 @@ export default function useHasUserApplied(userId, jobId) {
     }
 
     hasAlreadyApplied();
-  }, [jobId, userId]);
+  }, [jobId, userId, access_token]);
 
   return { userHasAlreadyApplied, isChecking };
 }

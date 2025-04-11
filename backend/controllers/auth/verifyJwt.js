@@ -8,8 +8,8 @@ async function verifyJwt(req, res, next) {
   const { authorization } = body;
   const jwt_token = authorization && authorization.split(" ")[1];
 
-  console.log("The header is", body);
-  console.log("The verify jwt token is", jwt_token);
+  // console.log("The header is", body);
+  // console.log("The verify jwt token is", jwt_token);
 
   if (!jwt_token) {
     return res
@@ -22,7 +22,7 @@ async function verifyJwt(req, res, next) {
     process.env.JWT_Access_TOKEN,
     (err, user) => {
       if (err) return res.status(403).json({ message: "Invalid token" });
-      console.log("JWT verifyied user", user);
+      // console.log("JWT verifyied user", user);
 
       req.user = user;
     }

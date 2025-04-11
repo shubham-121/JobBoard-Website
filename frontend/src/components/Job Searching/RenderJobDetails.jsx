@@ -13,6 +13,8 @@ import LoadingIndicator from "../Utils/LoadingIndicator";
 import Notification from "../Utils/Notification";
 import UploadResume from "./UploadResume";
 import useApplicationsCount from "../Utils/custom hooks/useApplicationsCount";
+import useHasUserApplied from "../Utils/custom hooks/useHasUserApplied";
+import SaveJobButton from "./Buttons/SaveJobButton";
 
 export default function RenderJobDetails({ jobData, setJobData }) {
   const dispatch = useDispatch();
@@ -41,8 +43,10 @@ export default function RenderJobDetails({ jobData, setJobData }) {
   const jobCompany = jobData.searchedJobs.jobCompany;
 
   // console.log(access_token);
-  const { count: totalApplicantsCount } = useApplicationsCount(jobId);
+  const { count: totalApplicantsCount } = useApplicationsCount(jobId); //custom hook to find total applicants for a  single job posting
   console.log("Total applicants count", totalApplicantsCount);
+  const { userHasAlreadyApplied } = useHasUserApplied(applicantId, jobId); //custom hook to check user has already applied or not then show the resume upload box based on it
+  console.log("User has already applied", userHasAlreadyApplied);
 
   async function handleApplyJob(e) {
     e.preventDefault();
@@ -67,7 +71,18 @@ export default function RenderJobDetails({ jobData, setJobData }) {
 
     }
 
-    setShowResumeUploadBox(true); //open modal first
+    //3-dont show  resume box if user already applied
+    if (userHasAlreadyApplied) {
+      dispatch(setNotification("You have already applied to this job"));
+
+      setTimeout(() => {
+        dispatch(clearNotification());
+      }, 2000);
+      return;
+    }
+
+    //4-show  resume box if user did not applied
+    setShowResumeUploadBox(true); //open modal first.
   }
 
   useEffect(() => {
@@ -76,6 +91,13 @@ export default function RenderJobDetails({ jobData, setJobData }) {
     console.log("Resume url set after file upload to cloud", resumeURL);
 
     async function applyToJob() {
+      //if user already has applied dont show him resume upload box
+      if (userHasAlreadyApplied) {
+        dispatch(setNotification("You have already applied to this job"));
+        setShowResumeUploadBox(false);
+        return;
+      }
+
       setIsSubmittingApplication(true);
 
       const applicantData = {
@@ -203,7 +225,7 @@ export default function RenderJobDetails({ jobData, setJobData }) {
           <div className="space-x-6 space-y-2">
             <button
               className={`py-2 px-6 rounded-md transition duration-200 ${
-                hasAppliedBefore
+                hasAppliedBefore || userHasAlreadyApplied
                   ? "bg-gray-500 text-white cursor-not-allowed" // Disabled styling
                   : "bg-blue-600 text-white hover:bg-blue-700"
               }`}
@@ -217,9 +239,10 @@ export default function RenderJobDetails({ jobData, setJobData }) {
               {hasAppliedBefore ? "Applied" : "Apply"}
             </button>
 
-            <button className="bg-gray-200 text-gray-800 py-2 px-7 rounded-md hover:bg-gray-300 transition duration-200">
+            {/* <button className="bg-gray-200 text-gray-800 py-2 px-7 rounded-md hover:bg-gray-300 transition duration-200">
               Save
-            </button>
+            </button> */}
+            <SaveJobButton userId={applicantId} jobId={jobId}></SaveJobButton>
           </div>
         </div>
         {/* Job Highlights */}
