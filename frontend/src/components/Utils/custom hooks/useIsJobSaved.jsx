@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import fetchRequest from "../fetchRequest";
 
+//check whether the user has already saved the job or not. If yes show Saved instead of Save
 export default function useIsJobSaved(jobId, userId) {
   const [hasUserSavedJob, setHasUserSavedJob] = useState(null);
   const [isChecking, setIsChecking] = useState(false);

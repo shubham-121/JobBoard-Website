@@ -5,7 +5,7 @@ import fetchRequest from "../../Utils/fetchRequest";
 import { useState } from "react";
 
 export default function SaveJobButton({ userId, jobId }) {
-  const { hasUserSavedJob, isChecking } = useIsJobSaved(jobId, userId);
+  const { hasUserSavedJob, isChecking } = useIsJobSaved(jobId, userId); ///check whether use has already saved the job or not
 
   const navigate = useNavigate();
   const dispatch = useDispatch();

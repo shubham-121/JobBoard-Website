@@ -11,7 +11,7 @@ export default function ProtectedRoute({ children }) {
     (store) => store.authentication
   );
 
-  console.log(`isAuth: ${isAuthenticated} -> accessToken: ${access_token}`);
+  // console.log(`isAuth: ${isAuthenticated} -> accessToken: ${access_token}`);
 
   if (!isAuthenticated || !access_token) {
     // alert("user not authenticated"); //show notification here later on

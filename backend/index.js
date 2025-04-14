@@ -28,7 +28,6 @@ const getHasUserApplied = require("./controllers/jobs/getHasUserApplied.js");
 
 //apply job file (multer)
 const applyJob = require("./controllers/jobs/applyJob.js");
-
 const upload = require("./controllers/jobs/multer/multerConfig.js");
 const uploadResume = require("./controllers/jobs/multer/uploadResume.js");
 
@@ -37,8 +36,11 @@ const checkJobSaved = require("./controllers/jobs/SaveJobs/checkJobSaved.js");
 const saveJob = require("./controllers/jobs/SaveJobs/saveJob.js");
 const unsaveJob = require("./controllers/jobs/SaveJobs/unsaveJob.js");
 
-//user files
+//user files for dashboard
 const userProfile = require("./controllers/user/profile.js");
+const getTotalAppliedJobs = require("./controllers/user/getTotalAppliedJobs.js");
+const getTotalSavedJobs = require("./controllers/user/getTotalSavedJobs.js");
+const getRecentActivity = require("./controllers/user/getRecentActivity.js");
 
 const app = express();
 
@@ -54,7 +56,12 @@ app.get("/", (req, res) => {
 //1- user login/signup route
 app.post("/api/auth/signup", userSignup);
 app.post("/api/auth/login", loginUser);
+
+//user profile routes (route for custom hooks also)
 app.get("/api/user/profile", verifyJwt, userProfile);
+app.get("/api/users/:userId/appliedJobs", verifyJwt, getTotalAppliedJobs);
+app.get("/api/users/:userId/savedJobs", verifyJwt, getTotalSavedJobs);
+app.get("/api/users/:userId/activities", verifyJwt, getRecentActivity);
 
 //2- job apply /save route
 app.post("/api/jobs/apply", verifyJwt, applyJob);

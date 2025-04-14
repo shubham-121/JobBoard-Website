@@ -8,6 +8,8 @@ import JobSearch from "./components/Job Searching/JobSearch";
 import RenderJobData from "./components/Job Searching/RenderJobData";
 import JobDetails from "./components/Job Searching/JobDetails";
 import PostJob from "./components/JobPosting/PostJob";
+import TotalAppliedJobs from "./components/Profile/DashBoard Cards/TotalAppliedJobs";
+import TotalSavedJobs from "./components/Profile/DashBoard Cards/TotalSavedJobs";
 
 const router = createBrowserRouter([
   {
@@ -27,11 +29,25 @@ const router = createBrowserRouter([
 
   {
     path: "/profile",
+    //protected route
+
     element: (
-      <ProtectedRoute>
-        <Profile></Profile>
-      </ProtectedRoute>
+      <Profile></Profile>
+
+      // <ProtectedRoute>
+      //   <Profile></Profile>
+      // </ProtectedRoute>
     ),
+  },
+
+  {
+    path: "/profile/appliedJobs",
+    element: <TotalAppliedJobs></TotalAppliedJobs>, //protected route
+  },
+
+  {
+    path: "/profile/savedJobs",
+    element: <TotalSavedJobs></TotalSavedJobs>, //protected route
   },
 
   //add protected component in future after completion
