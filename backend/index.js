@@ -38,9 +38,14 @@ const unsaveJob = require("./controllers/jobs/SaveJobs/unsaveJob.js");
 
 //user files for dashboard
 const userProfile = require("./controllers/user/profile.js");
-const getTotalAppliedJobs = require("./controllers/user/getTotalAppliedJobs.js");
-const getTotalSavedJobs = require("./controllers/user/getTotalSavedJobs.js");
-const getRecentActivity = require("./controllers/user/getRecentActivity.js");
+//for job seeker
+const getTotalAppliedJobs = require("./controllers/user/jobSeeker/getTotalAppliedJobs.js");
+const getTotalSavedJobs = require("./controllers/user/jobSeeker/getTotalSavedJobs.js");
+const getRecentActivity = require("./controllers/user/jobSeeker/getRecentActivity.js");
+//for recuiter
+const getJobsPosted = require("./controllers/user/recruiter/getJobsPosted.js");
+const getApplicants = require("./controllers/user/recruiter/getApplicants.js");
+const updateJobStatus = require("./controllers/user/recruiter/updateJobStatus.js");
 
 const app = express();
 
@@ -57,11 +62,18 @@ app.get("/", (req, res) => {
 app.post("/api/auth/signup", userSignup);
 app.post("/api/auth/login", loginUser);
 
-//user profile routes (route for custom hooks also)
+//2-user profile routes (route for custom hooks also)
 app.get("/api/user/profile", verifyJwt, userProfile);
+//for the job seekers
 app.get("/api/users/:userId/appliedJobs", verifyJwt, getTotalAppliedJobs);
 app.get("/api/users/:userId/savedJobs", verifyJwt, getTotalSavedJobs);
 app.get("/api/users/:userId/activities", verifyJwt, getRecentActivity);
+
+//for the recruiter
+app.get("/api/recruiters/:recruiterId/jobs", verifyJwt, getJobsPosted);
+app.get("/api/recruiters/:recruiterId/applicants", verifyJwt, getApplicants);
+//prettier-ignore
+app.patch("/api/jobs/:jobId/applicants/:applicantId/status", verifyJwt,updateJobStatus);
 
 //2- job apply /save route
 app.post("/api/jobs/apply", verifyJwt, applyJob);

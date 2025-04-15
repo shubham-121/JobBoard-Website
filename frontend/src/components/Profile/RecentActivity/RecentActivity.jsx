@@ -63,8 +63,8 @@ function RenderRecentActivity({ recentActivity }) {
   const navigate = useNavigate();
   const { appliedJobsActivity, savedJobsActivity } = recentActivity;
 
-  console.log(appliedJobsActivity);
-  console.log(savedJobsActivity);
+  // console.log(appliedJobsActivity);
+  // console.log(savedJobsActivity);
 
   function formatDate(date) {
     const savedAt = applicationDate(date);

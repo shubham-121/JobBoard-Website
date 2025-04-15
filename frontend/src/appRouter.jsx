@@ -8,8 +8,10 @@ import JobSearch from "./components/Job Searching/JobSearch";
 import RenderJobData from "./components/Job Searching/RenderJobData";
 import JobDetails from "./components/Job Searching/JobDetails";
 import PostJob from "./components/JobPosting/PostJob";
-import TotalAppliedJobs from "./components/Profile/DashBoard Cards/TotalAppliedJobs";
-import TotalSavedJobs from "./components/Profile/DashBoard Cards/TotalSavedJobs";
+import TotalSavedJobs from "./components/Profile/DashBoard Cards/JobSeeker/TotalSavedJobs";
+import TotalAppliedJobs from "./components/Profile/DashBoard Cards/JobSeeker/TotalAppliedJobs";
+import TotalJobsPosted from "./components/Profile/DashBoard Cards/Recruiter/TotalJobsPosted";
+import TotalApplicantsReceived from "./components/Profile/DashBoard Cards/Recruiter/TotalApplicantsReceived";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +42,7 @@ const router = createBrowserRouter([
     ),
   },
 
+  //only for job seeker
   {
     path: "/profile/appliedJobs",
     element: <TotalAppliedJobs></TotalAppliedJobs>, //protected route
@@ -48,6 +51,17 @@ const router = createBrowserRouter([
   {
     path: "/profile/savedJobs",
     element: <TotalSavedJobs></TotalSavedJobs>, //protected route
+  },
+
+  //only for recruiter
+  {
+    path: "/profile/jobsPosted",
+    element: <TotalJobsPosted></TotalJobsPosted>, //protected route
+  },
+
+  {
+    path: "/profile/applicants",
+    element: <TotalApplicantsReceived></TotalApplicantsReceived>, //protected route
   },
 
   //add protected component in future after completion

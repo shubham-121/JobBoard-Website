@@ -1,11 +1,11 @@
 // get details of all the jobs applied by the user
-const SavedJobs = require("../../models/SaveJobSchema/saveJobSchema");
+const Applicant = require("../../../models/ApplicantSchema/applicantSchema");
 const mongoose = require("mongoose");
 
-async function getTotalSavedJobs(req, res) {
+async function getTotalAppliedJobs(req, res) {
   const { userId } = req.params;
 
-  console.log("getTotalSavedJobs:", userId);
+  console.log("getTotalAppliedJobs:", userId);
 
   if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({
@@ -15,31 +15,22 @@ async function getTotalSavedJobs(req, res) {
   }
 
   try {
-    const savedJobs = await SavedJobs.find({ userId: userId }).populate({
-      path: "jobId",
-      select:
-        "jobTitle jobDescription jobCompany jobLocation jobSkillsRequired",
-    });
+    const appliedJobs = await Applicant.find({ applicantId: userId });
 
-    //if anything breaks delete the above query and use the query below
-    // const savedJobs = await SavedJobs.find({ userId: userId }).populate(
-    //   "jobId"
-    // );
-
-    if (!savedJobs || savedJobs.length <= 0) {
+    if (!appliedJobs || appliedJobs.length <= 0) {
       return res.status(200).json({
         message: "No jobs found for the logged in user",
         status: "NotFound",
-        savedJobs: savedJobs,
+        appliedJobs: appliedJobs,
       });
     }
 
-    console.log("All jobs saved by the user: ", savedJobs);
+    // console.log("All jobs applied by the user: ", appliedJobs);
 
     return res.status(200).json({
       message: "All jobs found for the logged in user",
       status: "Success",
-      savedJobs: savedJobs,
+      appliedJobs: appliedJobs,
     });
   } catch (error) {
     console.error("Error:", error.message);
@@ -51,4 +42,4 @@ async function getTotalSavedJobs(req, res) {
   }
 }
 
-module.exports = getTotalSavedJobs;
+module.exports = getTotalAppliedJobs;

@@ -1,6 +1,6 @@
 // get user recent activity
-const Applicant = require("../../models/ApplicantSchema/applicantSchema");
-const SavedJobs = require("../../models/SaveJobSchema/saveJobSchema");
+const Applicant = require("../../../models/ApplicantSchema/applicantSchema");
+const SavedJobs = require("../../../models/SaveJobSchema/saveJobSchema");
 const mongoose = require("mongoose");
 
 async function getRecentActivity(req, res) {
