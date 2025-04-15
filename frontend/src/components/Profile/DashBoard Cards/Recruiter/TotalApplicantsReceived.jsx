@@ -17,9 +17,25 @@ export default function TotalApplicantsReceived() {
   );
 }
 
+// ${job.status === "Rejected" ? "bg-red-100" : "bg-white"}
+
 function RenderPostedJobs({ jobApplicants }) {
   const [toggleModal, setToggleModal] = useState(false);
   const [selectedApplicant, setSelectedApplicant] = useState(null);
+
+  const jobStatus = {
+    Rejected: "bg-red-100 text-red-300",
+    Selected: "bg-green-100 text-green-300",
+    Shortlisted: "bg-blue-200 text-blue-300",
+    Reviewed: "bg-yellow-100 text-yellow-300",
+  };
+
+  const textColour = {
+    Rejected: " text-red-500",
+    Selected: " text-green-500",
+    Shortlisted: " text-blue-600",
+    Reviewed: " text-yellow-600",
+  };
 
   const navigate = useNavigate();
   return (
@@ -38,12 +54,22 @@ function RenderPostedJobs({ jobApplicants }) {
           jobApplicants.map((job, indx) => (
             <div
               key={indx}
-              className="bg-white shadow-md rounded-lg p-4 w-full sm:w-[48%] lg:w-[30%] hover:shadow-lg transition hover:ring-2 hover:ring-blue-400"
+              //prettier-ignore
+              className={`${jobStatus[job.status] || "bg-white"}  shadow-md rounded-lg p-4 w-full sm:w-[48%] lg:w-[30%] hover:shadow-lg transition hover:ring-2 hover:ring-blue-400`}
             >
-              {console.log(new Date(job.createdAt).toLocaleDateString("en-GB"))}
-              <h3 className="text-lg font-semibold text-indigo-600 mb-2">
-                {job.jobTitle}
-              </h3>
+              <div className="flex flex-row justify-between items-center">
+                <h3 className="text-lg font-semibold text-indigo-600 mb-2">
+                  {job.jobTitle}
+                </h3>
+                <p
+                  className={`text-lg font-semibold mb-2 ${
+                    textColour[job.status] || "text-gray-600"
+                  }`}
+                >
+                  {job.status}
+                </p>
+              </div>
+
               <p className="text-sm text-gray-700 mb-1">
                 <span className="font-medium">Company:</span> {job.jobCompany}
               </p>
@@ -101,3 +127,5 @@ function RenderPostedJobs({ jobApplicants }) {
     </div>
   );
 }
+
+//Lighten (optimize ) the  applicant query (reduce the uncessary fields)

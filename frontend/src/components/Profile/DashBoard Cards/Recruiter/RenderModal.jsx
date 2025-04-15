@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
+import fetchRequest from "../../../Utils/fetchRequest";
+import { useSelector } from "react-redux";
 
 //prettier-ignore
 export default function RenderModal({toggleModal,setToggleModal,selectedApplicant,setSelectedApplicant,}) {
 
+    const {access_token}=useSelector(store=>store.authentication)
+
   const { applicantId, jobId } = selectedApplicant;
+//   console.log(applicantId,jobId)
   console.log(selectedApplicant);
   console.log(selectedApplicant?.status);
 
@@ -28,7 +33,30 @@ export default function RenderModal({toggleModal,setToggleModal,selectedApplican
     }
   };
 
-  async function selectUser(){}
+  //change the job status of the applicant
+  async function handleSubmit(){
+
+    try{
+        const data = await fetchRequest(
+          `/api/jobs/${jobId._id}/applicants/${applicantId._id}/status`,
+          "PATCH",
+          {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+          JSON.stringify({status:recruiterAction})
+        );
+
+        console.log(data);
+
+    }catch(err){
+        alert("Error occured while updating job status")
+        console.error("Error occured while updating status:", err.message)
+
+    }
+
+    
+  }
 
 
 return (
@@ -122,15 +150,16 @@ return (
             >
               {/* "Pending", "Reviewed", "Shortlisted", "Rejected", "Selected" */}
               <option>{selectedApplicant?.status || "status"}</option>
-              <option value={"Approve"}>Approve</option>
-              <option value={"Reject"}>Reject</option>
-              <option value={"Waitlist"}>Waitlist</option>
+              <option value={"Reviewed"}>Reviewed</option>
+              <option value={"Shortlisted"}>Shortlisted</option>
+              <option value={"Selected"}>Selected</option>
+              <option value={"Rejected"}>Rejected</option>
             </select>
           </div>
         </div>
       </div>
       <div className="flex justify-center items-center">
-        <button className="border-custom hover:scale-95 bg-blue-200 px-4 py-1 rounded-2xl font-semibold text-xl ">
+        <button onClick={handleSubmit} className="border-custom hover:scale-95 bg-blue-200 px-4 py-1 rounded-2xl font-semibold text-xl ">
           Submit
         </button>
       </div>

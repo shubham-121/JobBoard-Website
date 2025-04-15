@@ -2,11 +2,13 @@
 
 const Applicant = require("../../../models/ApplicantSchema/applicantSchema");
 const Jobs = require("../../../models/jobs/jobSchema");
+const mongoose = require("mongoose");
 
 async function updateJobStatus(req, res) {
   const { jobId, applicantId } = req.params;
+  const { status } = req.body;
 
-  console.log("updateJobStatus:", RenderJobDetails, applicantId);
+  console.log("updateJobStatus:", jobId, applicantId, status);
 
   if (
     !jobId ||
@@ -20,29 +22,38 @@ async function updateJobStatus(req, res) {
     });
   }
 
-  try {
-    const jobsPosted = await Jobs.find({ jobPostedBy: recruiterId });
+  //   job status state- ["Pending", "Reviewed", "Shortlisted", "Rejected", "Selected"],
 
-    if (!jobsPosted || jobsPosted.length <= 0) {
+  try {
+    const filter = { jobId, applicantId };
+    const updateValue = { status: status };
+    const statusChange = await Applicant.findOneAndUpdate(filter, updateValue, {
+      new: true,
+    });
+
+    if (!statusChange || statusChange.length <= 0) {
       return res.status(200).json({
-        message: "No jobs found posted by the logged in user",
-        status: "NotFound",
-        jobsPosted: jobsPosted,
+        message: "Failed to update the job status of the user",
+        status: "Failure",
+        statusChange: statusChange,
       });
     }
 
-    // console.log("All jobs posted  by the recruiter: ", jobsPosted);
+    console.log("Job status updated: ", statusChange);
 
     return res.status(200).json({
-      message: "All jobs found  posted by the logged in user",
+      message: "Job status of the user updated",
       status: "Success",
-      jobsPosted: jobsPosted,
+      statusChange: statusChange,
     });
   } catch (error) {
-    console.error("Error:", error.message);
+    console.error(
+      "Error occured while updating the job status:",
+      error.message
+    );
 
     return res.status(200).json({
-      message: "Error occured while finding the  posted jobs by the user",
+      message: "Error occured while updating the job status",
       status: "Error",
     });
   }
