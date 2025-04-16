@@ -48,6 +48,8 @@ export default function RenderJobDetails({ jobData, setJobData }) {
   const { userHasAlreadyApplied } = useHasUserApplied(applicantId, jobId); //custom hook to check user has already applied or not then show the resume upload box based on it
   console.log("User has already applied", userHasAlreadyApplied);
 
+  console.log("auth user data", authUserData);
+
   async function handleApplyJob(e) {
     e.preventDefault();
 
@@ -62,13 +64,18 @@ export default function RenderJobDetails({ jobData, setJobData }) {
       setTimeout(() => {
         dispatch(clearNotification());
       }, 2500);
+    }
 
-      //2-first check user role, only job seeker is allowed to apply to the job
-      if (authUserData.userRole === "Recruiter") {
-        alert("Only job seekers can apply");
-        return;
-      }
+    //2-first check user role, only job seeker is allowed to apply to the job
+    if (authUserData.userRole === "Recruiter") {
+      dispatch(setNotification("Only job seekers can apply"));
 
+      setTimeout(() => {
+        dispatch(clearNotification());
+      }, 2000);
+
+      // setShowResumeUploadBox(false);
+      return;
     }
 
     //3-dont show  resume box if user already applied

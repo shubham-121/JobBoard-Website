@@ -4,6 +4,7 @@ import avatar from "../../images/user/avatar.avif";
 import { useState } from "react";
 import RecentActivity from "./RecentActivity/RecentActivity";
 import { openModal } from "../../Redux/Slices/modalSlice";
+import { useNavigate } from "react-router";
 
 export default function SideBar() {
   return (
@@ -17,7 +18,8 @@ function Avatar() {
   const { authUserData } = useSelector((store) => store.authentication);
 
   console.log("Auth user data", authUserData);
-  const { userName, userEmail, userPhoneNumber, userRole } = authUserData;
+  const { userName, userEmail, userPhoneNumber, userRole, userId } =
+    authUserData;
   return (
     <div>
       <div className="text-center border-b border-gray-200 pb-4 mb-4">
@@ -37,21 +39,31 @@ function Avatar() {
           Role: {userRole}
         </p>
       </div>
-      <AvatarMenu />
+      <AvatarMenu userRole={userRole} userId={userId} />
     </div>
   );
 }
 
-function AvatarMenu() {
+function AvatarMenu({ userRole, userId }) {
   const [defaultBtn, setDefaultBtn] = useState("Profile");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  function handleEditProfile() {
+    //navigate to edit form when  edit profile is clicked
+
+    if (userRole === "Recruiter") navigate(`/profile/edit/recruiter/${userId}`);
+    //different for recruiter
+    else navigate(`/profile/edit/jobSeeker/${userId}`); //different for job seeker
+  }
+
   return (
     <div className="flex flex-col gap-2 text-left">
       <button
         onClick={() => setDefaultBtn("Profile")}
         value={defaultBtn}
         // className="text-lg text-gray-700 hover:text-white hover:bg-blue-600 transition duration-300 ease-in-out px-4 py-2 rounded-lg  focus:outline-none focus:ring-4 focus:ring-blue-400"
-        className={`text-lg text-gray-700 hover:text-white hover:bg-blue-600 transition duration-300 ease-in-out px-4 py-2 rounded-lg  ${
+        className={`text-lg active:scale-95 text-gray-700 hover:text-white hover:bg-blue-600 transition duration-300 ease-in-out px-4 py-2 rounded-lg  ${
           defaultBtn === "Profile"
             ? "focus:outline-none focus:ring-4 focus:ring-blue-400 outline-4 outline-blue-400"
             : ""
@@ -62,10 +74,10 @@ function AvatarMenu() {
       <button
         onClick={() => {
           setDefaultBtn("Recent Activity");
-          dispatch(openModal());
+          dispatch(openModal()); //open recent activity modal
         }}
         value={defaultBtn}
-        className={`text-lg text-gray-700 hover:text-white hover:bg-blue-600 transition duration-300 ease-in-out px-4 py-2 rounded-lg  ${
+        className={`text-lg active:scale-95  text-gray-700 hover:text-white hover:bg-blue-600 transition duration-300 ease-in-out px-4 py-2 rounded-lg  ${
           defaultBtn === "Recent Activity"
             ? "focus:outline-none focus:ring-4 focus:ring-blue-400 outline-4 outline-blue-400"
             : ""
@@ -74,9 +86,12 @@ function AvatarMenu() {
         Recent Activity
       </button>
       <button
-        onClick={() => setDefaultBtn("Edit Profile")}
+        onClick={() => {
+          setDefaultBtn("Edit Profile");
+          handleEditProfile();
+        }}
         value={defaultBtn}
-        className={`text-lg text-gray-700 hover:text-white hover:bg-blue-600 transition duration-300 ease-in-out px-4 py-2 rounded-lg  ${
+        className={` active:scale-95 text-lg text-gray-700 hover:text-white hover:bg-blue-600 transition duration-300 ease-in-out px-4 py-2 rounded-lg  ${
           defaultBtn === "Edit Profile"
             ? "focus:outline-none focus:ring-4 focus:ring-blue-400 outline-4 outline-blue-400"
             : ""

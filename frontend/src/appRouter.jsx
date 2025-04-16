@@ -12,6 +12,9 @@ import TotalSavedJobs from "./components/Profile/DashBoard Cards/JobSeeker/Total
 import TotalAppliedJobs from "./components/Profile/DashBoard Cards/JobSeeker/TotalAppliedJobs";
 import TotalJobsPosted from "./components/Profile/DashBoard Cards/Recruiter/TotalJobsPosted";
 import TotalApplicantsReceived from "./components/Profile/DashBoard Cards/Recruiter/TotalApplicantsReceived";
+import ApplicantFullProfile from "./components/Profile/DashBoard Cards/Recruiter/ApplicantFullProfile";
+import EditRecruiterProfile from "./components/Profile/EditProfile/Recruiter/EditRecruiterProfile";
+import EditJobSeekerProfile from "./components/Profile/EditProfile/JobSeeker/EditJobSeekerProfile";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +67,22 @@ const router = createBrowserRouter([
     element: <TotalApplicantsReceived></TotalApplicantsReceived>, //protected route
   },
 
+  {
+    path: "/profile/viewApplicant/:userId", //recruiter view of the applicant. Protected route
+    element: <ApplicantFullProfile></ApplicantFullProfile>,
+  },
+
+  {
+    path: "/profile/edit/recruiter/:userId", //edit-profile form component for recruiter only
+    element: <EditRecruiterProfile></EditRecruiterProfile>,
+  },
+
+  {
+    path: "/profile/edit/jobSeeker/:userId", //edit-profile form component for job-seeker only
+    element: <EditJobSeekerProfile></EditJobSeekerProfile>,
+  },
+
+  //only for the job seeker
   //add protected component in future after completion
   {
     path: "/findJobs",

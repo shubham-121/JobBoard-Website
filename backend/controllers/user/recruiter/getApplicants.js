@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 async function getApplicants(req, res) {
   const { recruiterId } = req.params;
 
-  console.log("Recruite id getApplicants route:", recruiterId);
+  //   console.log("Recruite id getApplicants route:", recruiterId);
 
   if (!recruiterId || !mongoose.Types.ObjectId.isValid(recruiterId)) {
     return res.status(400).json({
@@ -22,7 +22,7 @@ async function getApplicants(req, res) {
       .populate("applicantId")
       .populate("jobId");
 
-    console.log("All applicants for the posted job: ", jobApplicants);
+    // console.log("All applicants for the posted job: ", jobApplicants);
 
     if (!jobApplicants || jobApplicants.length <= 0) {
       return res.status(200).json({

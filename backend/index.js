@@ -37,11 +37,14 @@ const saveJob = require("./controllers/jobs/SaveJobs/saveJob.js");
 const unsaveJob = require("./controllers/jobs/SaveJobs/unsaveJob.js");
 
 //user files for dashboard
-const userProfile = require("./controllers/user/profile.js");
+const userProfile = require("./controllers/user/profile/profile.js");
+const individualProfile = require("./controllers/user/profile/individualProfile.js");
 //for job seeker
 const getTotalAppliedJobs = require("./controllers/user/jobSeeker/getTotalAppliedJobs.js");
 const getTotalSavedJobs = require("./controllers/user/jobSeeker/getTotalSavedJobs.js");
 const getRecentActivity = require("./controllers/user/jobSeeker/getRecentActivity.js");
+const editJobSeekerProfile = require("./controllers/user/editProfile/editJobSeekerProfile.js");
+
 //for recuiter
 const getJobsPosted = require("./controllers/user/recruiter/getJobsPosted.js");
 const getApplicants = require("./controllers/user/recruiter/getApplicants.js");
@@ -64,10 +67,13 @@ app.post("/api/auth/login", loginUser);
 
 //2-user profile routes (route for custom hooks also)
 app.get("/api/user/profile", verifyJwt, userProfile);
+app.get("/api/user/profile/:userId", verifyJwt, individualProfile);
 //for the job seekers
 app.get("/api/users/:userId/appliedJobs", verifyJwt, getTotalAppliedJobs);
 app.get("/api/users/:userId/savedJobs", verifyJwt, getTotalSavedJobs);
 app.get("/api/users/:userId/activities", verifyJwt, getRecentActivity);
+
+app.patch("/api/users/jobSeeker/editProfile/:userId", verifyJwt, editJobSeekerProfile);
 
 //for the recruiter
 app.get("/api/recruiters/:recruiterId/jobs", verifyJwt, getJobsPosted);

@@ -1,8 +1,10 @@
 //get user profile details like name,email etc using jwt token
-const Users = require("../../models/UserSchema/userSignup");
+const Users = require("../../../models/UserSchema/userSignup");
 
 async function profile(req, res) {
   const user = req.user;
+
+  // console.log("new user", user);
   const { email, _id } = user;
 
   if (!email || !_id) {

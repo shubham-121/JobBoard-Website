@@ -53,6 +53,8 @@ export default function Profile() {
             savedJobs={totalSavedJobs}
             isLoadingSavedJobs={isLoadingSavedJobs}
           />
+
+          {/* Projects, experince,education section below (make in future) */}
         </div>
       </div>
     </>

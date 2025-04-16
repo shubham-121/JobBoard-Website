@@ -31,6 +31,62 @@ const userSignupSchema = new mongoose.Schema(
       required: true,
       enum: ["Recruiter", "Job Seeker"],
     },
+
+    //optional fields
+
+    //1-for job seeker
+    userAbout: {
+      type: String,
+    },
+    userSocial: {
+      type: String,
+    },
+    userResume: {
+      type: String,
+    },
+    userSkills: {
+      type: [String],
+    },
+    userExperience: [
+      {
+        companyName: { type: String },
+        yoe: { type: String },
+        jobTitle: { type: String },
+        duration: { type: String }, // e.g. "Jan 2021 - Dec 2023"
+        location: { type: String },
+        description: { type: String }, // what they worked on, achievements
+        technologies: [String], // optional
+      },
+    ],
+
+    userEducation: {
+      instituteName: { type: String },
+      from: { type: Date },
+      to: { type: Date },
+      degree: { type: String },
+    },
+
+    userProjects: [
+      {
+        projectName: { type: String },
+        description: { type: String },
+        technologiesUsed: { type: [String] },
+        startDate: { type: Date },
+        endDate: { type: Date }, // Optional, because some projects might be ongoing
+        role: { type: String },
+        link: { type: String },
+      },
+    ],
+
+    //2-for recruiter
+    recruiterProfile: {
+      companyName: { type: String },
+      companyWebsite: { type: String },
+      aboutCompany: { type: String },
+      designation: { type: String },
+      linkedInProfile: { type: String },
+      companyLogo: { type: String }, // optional: for branding
+    },
   },
   { timestamps: true }
 );

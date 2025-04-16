@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import fetchRequest from "../../../Utils/fetchRequest";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 //prettier-ignore
 export default function RenderModal({toggleModal,setToggleModal,selectedApplicant,setSelectedApplicant,}) {
 
     const {access_token}=useSelector(store=>store.authentication)
+    const navigate=useNavigate()
 
   const { applicantId, jobId } = selectedApplicant;
 //   console.log(applicantId,jobId)
@@ -73,6 +75,19 @@ return (
         X
       </button>
 
+      <div className="flex justify-center items-center">
+        <a
+          onClick={() =>
+            navigate(
+              `/profile/viewApplicant/${selectedApplicant?.applicantId?._id}`,
+              { state: selectedApplicant?.applicantId?._id }
+            )
+          }
+          className="text-blue-400 font-semibold hover:text-green-400 cursor-pointer"
+        >
+          Show User Profile
+        </a>
+      </div>
       <div className="text-gray-800 mt-6">
         {/* Applicant Section */}
         <h2 className="text-xl font-semibold text-indigo-700 border-b pb-2 mb-4">
@@ -159,7 +174,10 @@ return (
         </div>
       </div>
       <div className="flex justify-center items-center">
-        <button onClick={handleSubmit} className="border-custom hover:scale-95 bg-blue-200 px-4 py-1 rounded-2xl font-semibold text-xl ">
+        <button
+          onClick={handleSubmit}
+          className="border-custom hover:scale-95 bg-blue-200 px-4 py-1 rounded-2xl font-semibold text-xl "
+        >
           Submit
         </button>
       </div>
