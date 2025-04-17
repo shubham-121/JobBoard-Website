@@ -17,7 +17,7 @@ export default function useGetApplicantProfile(userId) {
   const [isLoadingApplicant, setIsLoadingApplicant] = useState(false);
 
   useEffect(() => {
-    // if (!access_token || !isAuthenticated) {
+    // if (!access_token || !userId) {
     //   navigate("/login");
     //   alert("Login again please");
     //   return;

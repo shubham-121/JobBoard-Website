@@ -20,7 +20,20 @@ function UserDetails({ userProfileData }) {
       <DetailItem label="Role:" value={userProfileData?.userRole} />
       <DetailItem label="Location" value={userProfileData?.userCity} />
 
-      <DetailItem label="Resume:" value={"??Show resume link here??"} />
+      {/* <DetailItem label="Resume:" value={userProfileData?.userResume} /> */}
+
+      <div className="flex items-center">
+        <span className="font-semibold text-gray-800 w-32">Resume: </span>
+        <span className="text-gray-600 break-words">
+          <a
+            target="_blank"
+            href={userProfileData?.userResume}
+            className="text-blue-500 active:scale-90 active:text-green-500 font-bold  hover:shadow-2xl"
+          >
+            Click Here
+          </a>
+        </span>
+      </div>
     </div>
   );
 }
@@ -29,7 +42,9 @@ function DetailItem({ label, value }) {
   return (
     <div className="flex items-center">
       <span className="font-semibold text-gray-800 w-32">{label}</span>
-      <span className="text-gray-600 break-words">{value}</span>
+      <span className="text-gray-600 break-words font-semibold text-lg">
+        {value}
+      </span>
     </div>
   );
 }

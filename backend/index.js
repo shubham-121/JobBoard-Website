@@ -44,6 +44,7 @@ const getTotalAppliedJobs = require("./controllers/user/jobSeeker/getTotalApplie
 const getTotalSavedJobs = require("./controllers/user/jobSeeker/getTotalSavedJobs.js");
 const getRecentActivity = require("./controllers/user/jobSeeker/getRecentActivity.js");
 const editJobSeekerProfile = require("./controllers/user/editProfile/editJobSeekerProfile.js");
+const userResumeUpload = require("./controllers/user/editProfile/userResumeUpload.js");
 
 //for recuiter
 const getJobsPosted = require("./controllers/user/recruiter/getJobsPosted.js");
@@ -73,7 +74,19 @@ app.get("/api/users/:userId/appliedJobs", verifyJwt, getTotalAppliedJobs);
 app.get("/api/users/:userId/savedJobs", verifyJwt, getTotalSavedJobs);
 app.get("/api/users/:userId/activities", verifyJwt, getRecentActivity);
 
-app.patch("/api/users/jobSeeker/editProfile/:userId", verifyJwt, editJobSeekerProfile);
+//job seeker edit profile form
+app.patch(
+  "/api/users/jobSeeker/editProfile/:userId",
+  verifyJwt,
+  editJobSeekerProfile
+);
+app.post(
+  "/api/users/jobSeeker/editProfile/uploadResume/", //resume upload from edit form
+  verifyJwt,
+  upload.single("resume"),
+  userResumeUpload
+  // uploadResume
+);
 
 //for the recruiter
 app.get("/api/recruiters/:recruiterId/jobs", verifyJwt, getJobsPosted);

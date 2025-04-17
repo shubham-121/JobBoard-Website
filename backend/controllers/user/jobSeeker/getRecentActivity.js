@@ -1,6 +1,7 @@
 // get user recent activity
 const Applicant = require("../../../models/ApplicantSchema/applicantSchema");
 const SavedJobs = require("../../../models/SaveJobSchema/saveJobSchema");
+const Users = require("../../../models/UserSchema/userSignup");
 const mongoose = require("mongoose");
 
 async function getRecentActivity(req, res) {
@@ -31,6 +32,17 @@ async function getRecentActivity(req, res) {
       .populate("jobId");
 
     //3- profile updated also add
+    //find the difference on the basis of createdAt and updatedAt. IF both differ, then user updated his profile
+
+    const updatedProfileActivity = await Users.findById({ _id: userId });
+    const createdAt = new Date(updatedProfileActivity.createdAt);
+    const updatedAt = new Date(updatedProfileActivity.updatedAt);
+
+    const profileUpdated = createdAt.getTime() !== updatedAt.getTime();
+
+    // console.log("Difference is:", createdAt, updatedAt, profileUpdated);
+
+    console.log("updated user profile activity:", updatedProfileActivity);
 
     //4- resume updated also add
 
@@ -61,7 +73,13 @@ async function getRecentActivity(req, res) {
     return res.status(200).json({
       message: "All user activity found for the logged in user",
       status: "Success",
-      userRecentActivity: { appliedJobsActivity, savedJobsActivity },
+      userRecentActivity: {
+        appliedJobsActivity,
+        savedJobsActivity,
+        updatedProfileActivity: profileUpdated //send response if profile is updated based on difference btw createdAt and updatedAt
+          ? "You Updated Your Profile"
+          : "",
+      },
     });
   } catch (error) {
     console.error("Error:", error.message);

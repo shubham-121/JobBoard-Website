@@ -5,7 +5,7 @@ async function editJobSeekerProfile(req, res) {
   const body = req.body;
 
   //prettier-ignore
-  const {name,email,phone,location,skills,linkedin,company,experince,institute,degree,} = body;
+  const {name,email,phone,location,skills,linkedin,company,experince,institute,degree,headline,resume} = body;
 
   console.log("Edit profile route for job seeker", userId, body);
 
@@ -22,12 +22,14 @@ async function editJobSeekerProfile(req, res) {
     userName: name,
     userEmail: email,
     userPhoneNumber: phone,
-
     userCity: location,
 
     userSkills: skills,
-
     userSocial: linkedin,
+
+    userHeadline: headline,
+    userResume: resume,
+
     userExperience: {
       companyName: company,
       yoe: experince,

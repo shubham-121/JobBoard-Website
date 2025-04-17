@@ -61,7 +61,8 @@ export default function RecentActivity({ userId }) {
 //redner recent activity list
 function RenderRecentActivity({ recentActivity }) {
   const navigate = useNavigate();
-  const { appliedJobsActivity, savedJobsActivity } = recentActivity;
+  const { appliedJobsActivity, savedJobsActivity, updatedProfileActivity } =
+    recentActivity;
 
   // console.log(appliedJobsActivity);
   // console.log(savedJobsActivity);
@@ -74,7 +75,7 @@ function RenderRecentActivity({ recentActivity }) {
 
   return (
     <div className="space-y-4 px-4 py-2 overflow-y-auto h-[500px]">
-      {/* Applied Jobs */}
+      {/* Applied Jobs activity */}
       {appliedJobsActivity.length > 0 && (
         <h3 className="text-lg font-semibold text-gray-700 mt-4 mb-2">
           Applied Jobs
@@ -118,7 +119,7 @@ function RenderRecentActivity({ recentActivity }) {
         </div>
       ))}
 
-      {/* Saved Jobs */}
+      {/* Saved Jobs activity*/}
       {savedJobsActivity.length > 0 && (
         <h3 className="text-lg font-semibold text-gray-700 mt-6 mb-2">
           Saved Jobs
@@ -162,6 +163,26 @@ function RenderRecentActivity({ recentActivity }) {
           </button>
         </div>
       ))}
+
+      {/* updated profile of user activity */}
+      {updatedProfileActivity && (
+        <div>
+          <h3 className="text-lg font-semibold text-gray-700 mt-6 mb-2">
+            Saved Jobs
+          </h3>
+
+          <div className="border border-gray-300 rounded-md p-4 shadow-sm hover:shadow-md transition duration-200">
+            <p className="text-gray-800 mb-2"></p>
+            <p className="flex justify-between items-center mt-2 text-sm text-gray-600">
+              <span>
+                <span className="font-bold text-center text-gray-700">
+                  {updatedProfileActivity}
+                </span>
+              </span>
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

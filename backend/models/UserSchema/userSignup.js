@@ -35,7 +35,8 @@ const userSignupSchema = new mongoose.Schema(
     //optional fields
 
     //1-for job seeker
-    userAbout: {
+    userHeadline: {
+      //short info about the user
       type: String,
     },
     userSocial: {
