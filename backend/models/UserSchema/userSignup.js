@@ -42,6 +42,10 @@ const userSignupSchema = new mongoose.Schema(
     userSocial: {
       type: String,
     },
+    userYoe: {
+      type: String,
+    },
+
     userResume: {
       type: String,
     },

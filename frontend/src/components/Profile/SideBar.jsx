@@ -60,7 +60,10 @@ function AvatarMenu({ userRole, userId }) {
   return (
     <div className="flex flex-col gap-2 text-left">
       <button
-        onClick={() => setDefaultBtn("Profile")}
+        onClick={() => {
+          setDefaultBtn("Profile");
+          navigate("/profile");
+        }}
         value={defaultBtn}
         // className="text-lg text-gray-700 hover:text-white hover:bg-blue-600 transition duration-300 ease-in-out px-4 py-2 rounded-lg  focus:outline-none focus:ring-4 focus:ring-blue-400"
         className={`text-lg active:scale-95 text-gray-700 hover:text-white hover:bg-blue-600 transition duration-300 ease-in-out px-4 py-2 rounded-lg  ${

@@ -25,6 +25,7 @@ const getJobs = require("./controllers/jobs/getJobs.js");
 const getJobDetails = require("./controllers/jobs/getJobDetails.js");
 const getApplicationCount = require("./controllers/jobs/getApplicationCount.js");
 const getHasUserApplied = require("./controllers/jobs/getHasUserApplied.js");
+const getRecruiterProfile = require("./controllers/user/recruiter/getRecruiterProfile.js");
 
 //apply job file (multer)
 const applyJob = require("./controllers/jobs/applyJob.js");
@@ -44,6 +45,7 @@ const getTotalAppliedJobs = require("./controllers/user/jobSeeker/getTotalApplie
 const getTotalSavedJobs = require("./controllers/user/jobSeeker/getTotalSavedJobs.js");
 const getRecentActivity = require("./controllers/user/jobSeeker/getRecentActivity.js");
 const editJobSeekerProfile = require("./controllers/user/editProfile/editJobSeekerProfile.js");
+const editRecruiterProfile = require("./controllers/user/editProfile/editRecruiterProfile.js");
 const userResumeUpload = require("./controllers/user/editProfile/userResumeUpload.js");
 
 //for recuiter
@@ -73,6 +75,7 @@ app.get("/api/user/profile/:userId", verifyJwt, individualProfile);
 app.get("/api/users/:userId/appliedJobs", verifyJwt, getTotalAppliedJobs);
 app.get("/api/users/:userId/savedJobs", verifyJwt, getTotalSavedJobs);
 app.get("/api/users/:userId/activities", verifyJwt, getRecentActivity);
+app.get("/api/user/recruiterProfile/:userId", verifyJwt, getRecruiterProfile);
 
 //job seeker edit profile form
 app.patch(
@@ -93,6 +96,13 @@ app.get("/api/recruiters/:recruiterId/jobs", verifyJwt, getJobsPosted);
 app.get("/api/recruiters/:recruiterId/applicants", verifyJwt, getApplicants);
 //prettier-ignore
 app.patch("/api/jobs/:jobId/applicants/:applicantId/status", verifyJwt,updateJobStatus);
+
+//edit recruiter profile
+app.patch(
+  "/api/users/recruiter/editProfile/:userId",
+  verifyJwt,
+  editRecruiterProfile
+);
 
 //2- job apply /save route
 app.post("/api/jobs/apply", verifyJwt, applyJob);
