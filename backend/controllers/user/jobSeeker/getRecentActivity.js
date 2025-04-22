@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 async function getRecentActivity(req, res) {
   const { userId } = req.params;
 
-  console.log("getRecentActivity:", userId);
+  // console.log("getRecentActivity:", userId);
 
   if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({
@@ -42,33 +42,50 @@ async function getRecentActivity(req, res) {
 
     // console.log("Difference is:", createdAt, updatedAt, profileUpdated);
 
-    console.log("updated user profile activity:", updatedProfileActivity);
+    // console.log("updated user profile activity:", updatedProfileActivity);
 
-    //4- resume updated also add
+    //4- resume updated also ada
+
+    //5- applied job updates also (like shortlisted,rejected,selected)
+    //check status of applications where status !=pending
+    const updatedApplicationStatus = await Applicant.find({
+      applicantId: userId,
+      status: { $ne: "Pending" },
+    });
+    console.log(
+      "updatedappstatus",
+      updatedApplicationStatus,
+      updatedApplicationStatus.length
+    );
 
     //return if both arrays are missing
     if (
       (!appliedJobsActivity || appliedJobsActivity.length === 0) &&
-      (!savedJobsActivity || savedJobsActivity.length === 0)
+      (!savedJobsActivity || savedJobsActivity.length === 0) &&
+      (!updatedApplicationStatus || updatedApplicationStatus.length === 0)
     ) {
       return res.status(200).json({
         message: "No activity found for the logged in user",
         status: "NotFound",
-        userRecentActivity: { appliedJobsActivity, savedJobsActivity },
+        userRecentActivity: {
+          appliedJobsActivity,
+          savedJobsActivity,
+          jobStatusUpdates: updatedApplicationStatus,
+        },
       });
     }
 
     //if any one of the array is available, is proceeds further
 
-    console.log(
-      `${appliedJobsActivity.length}-> recent applied activity of the user:`,
-      appliedJobsActivity
-    );
+    // console.log(
+    //   `${appliedJobsActivity.length}-> recent applied activity of the user:`,
+    //   appliedJobsActivity
+    // );
 
-    console.log(
-      `${savedJobsActivity.length}-> recent saved activity of the user:`,
-      savedJobsActivity
-    );
+    // console.log(
+    //   `${savedJobsActivity.length}-> recent saved activity of the user:`,
+    //   savedJobsActivity
+    // );
 
     return res.status(200).json({
       message: "All user activity found for the logged in user",
@@ -79,6 +96,7 @@ async function getRecentActivity(req, res) {
         updatedProfileActivity: profileUpdated //send response if profile is updated based on difference btw createdAt and updatedAt
           ? "You Updated Your Profile"
           : "",
+        jobStatusUpdates: updatedApplicationStatus,
       },
     });
   } catch (error) {

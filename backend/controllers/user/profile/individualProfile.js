@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 async function individualProfile(req, res) {
   const { userId } = req.params;
-  console.log("individual User details for profile route, userId", userId);
+  // console.log("individual User details for profile route, userId", userId);
 
   if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({
@@ -20,10 +20,10 @@ async function individualProfile(req, res) {
     { userPassword: 0 }
   );
 
-  console.log(
-    "individual User details for profile route",
-    individualUserDetails
-  );
+  // console.log(
+  //   "individual User details for profile route",
+  //   individualUserDetails
+  // );
 
   if (!individualUserDetails) {
     return res.status(400).json({

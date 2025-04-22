@@ -26,7 +26,7 @@ async function profile(req, res) {
     });
   }
 
-  console.log("User details for profile route", userDetails);
+  // console.log("User details for profile route", userDetails);
 
   return res.status(200).json({
     message: "User profile details found",

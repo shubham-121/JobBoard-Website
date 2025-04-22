@@ -15,7 +15,7 @@ async function getApplicationCount(req, res) {
       });
     }
 
-    console.log("Total applicants count:", totalApplicants);
+    // console.log("Total applicants count:", totalApplicants);
 
     return res.status(200).json({
       message: "Applications count for current job fetched",

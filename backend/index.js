@@ -43,6 +43,7 @@ const individualProfile = require("./controllers/user/profile/individualProfile.
 //for job seeker
 const getTotalAppliedJobs = require("./controllers/user/jobSeeker/getTotalAppliedJobs.js");
 const getTotalSavedJobs = require("./controllers/user/jobSeeker/getTotalSavedJobs.js");
+const getTotalShortlistedJobs = require("./controllers/user/jobSeeker/getTotalShortlistedJobs.js");
 const getRecentActivity = require("./controllers/user/jobSeeker/getRecentActivity.js");
 const editJobSeekerProfile = require("./controllers/user/editProfile/editJobSeekerProfile.js");
 const editRecruiterProfile = require("./controllers/user/editProfile/editRecruiterProfile.js");
@@ -74,6 +75,17 @@ app.get("/api/user/profile/:userId", verifyJwt, individualProfile);
 //for the job seekers
 app.get("/api/users/:userId/appliedJobs", verifyJwt, getTotalAppliedJobs);
 app.get("/api/users/:userId/savedJobs", verifyJwt, getTotalSavedJobs);
+app.get(
+  "/api/users/:userId/shortlistedJobs",
+  verifyJwt,
+  getTotalShortlistedJobs
+);
+// app.get(
+//   "/api/users/:userId/shortlistedJobsCount",
+//   verifyJwt,
+//   getShortlistedJobsCount
+// );
+
 app.get("/api/users/:userId/activities", verifyJwt, getRecentActivity);
 app.get("/api/user/recruiterProfile/:userId", verifyJwt, getRecruiterProfile);
 

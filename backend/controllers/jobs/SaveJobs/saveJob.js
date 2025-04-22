@@ -3,7 +3,7 @@ const SavedJobs = require("../../../models/SaveJobSchema/saveJobSchema");
 async function saveJob(req, res) {
   const { userId, jobId } = req.body;
 
-  console.log("saveJob route", userId, jobId);
+  // console.log("saveJob route", userId, jobId);
 
   if (!userId || !jobId) {
     return res.status(400).json({ message: "Fields are missing" });
@@ -29,7 +29,7 @@ async function saveJob(req, res) {
         .json({ message: "Error in saving the job", status: "Failure" });
     }
 
-    console.log("Job has been saved", savedJob);
+    // console.log("Job has been saved", savedJob);
 
     return res
       .status(200)

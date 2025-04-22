@@ -14,8 +14,8 @@ async function userResumeUpload(req, res) {
     api_secret: process.env.CLOUDINARY_API_SECRET, // Click 'View API Keys' above to copy your API secret
   });
 
-  console.log("Req body:", req.body);
-  console.log("Req file:", req.file);
+  // console.log("Req body:", req.body);
+  // console.log("Req file:", req.file);
 
   //resume validation check here
   if (!req.file) {
@@ -49,7 +49,7 @@ async function userResumeUpload(req, res) {
       });
     }
 
-    console.log("Resume upload:", resumeUpload);
+    // console.log("Resume upload:", resumeUpload);
 
     fs.unlinkSync(req.file.path); // delete files storing locally
 

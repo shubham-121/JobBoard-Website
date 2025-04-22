@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 async function getTotalSavedJobs(req, res) {
   const { userId } = req.params;
 
-  console.log("getTotalSavedJobs:", userId);
+  // console.log("getTotalSavedJobs:", userId);
 
   if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({
@@ -34,7 +34,7 @@ async function getTotalSavedJobs(req, res) {
       });
     }
 
-    console.log("All jobs saved by the user: ", savedJobs);
+    // console.log("All jobs saved by the user: ", savedJobs);
 
     return res.status(200).json({
       message: "All jobs found for the logged in user",

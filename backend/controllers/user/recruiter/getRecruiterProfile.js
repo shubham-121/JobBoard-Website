@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 
 async function getRecruiterProfile(req, res) {
   const { userId } = req.params;
-  console.log("get recruite profile", userId);
+  // console.log("get recruite profile", userId);
 
   if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({
@@ -21,7 +21,7 @@ async function getRecruiterProfile(req, res) {
     { userPassword: 0 }
   );
 
-  console.log("recruiter profile is: ", recruiterProfile);
+  // console.log("recruiter profile is: ", recruiterProfile);
 
   if (!recruiterProfile) {
     return res.status(400).json({

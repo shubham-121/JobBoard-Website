@@ -61,11 +61,15 @@ export default function RecentActivity({ userId }) {
 //redner recent activity list
 function RenderRecentActivity({ recentActivity }) {
   const navigate = useNavigate();
-  const { appliedJobsActivity, savedJobsActivity, updatedProfileActivity } =
-    recentActivity;
+  const {
+    appliedJobsActivity,
+    savedJobsActivity,
+    updatedProfileActivity,
+    jobStatusUpdates, //user application status change activity
+  } = recentActivity;
 
   // console.log(appliedJobsActivity);
-  // console.log(savedJobsActivity);
+  console.log(jobStatusUpdates);
 
   function formatDate(date) {
     const savedAt = applicationDate(date);
@@ -183,6 +187,100 @@ function RenderRecentActivity({ recentActivity }) {
           </div>
         </div>
       )}
+      {/*  */}
+      {/* applicant job status change  */}
+
+      {jobStatusUpdates.length > 0 && (
+        <h3 className="text-lg font-semibold text-gray-700 mt-6 mb-2">
+          Job Status Changed
+        </h3>
+      )}
+      {jobStatusUpdates.map((activity, indx) => (
+        <div
+          key={`saved-${indx}`}
+          className="border border-gray-300 rounded-md p-4 shadow-sm hover:shadow-md transition duration-200"
+        >
+          <p className="text-gray-800 mb-2 flex flex-col">
+            <span className="font-semibold">
+              At:{" " + activity?.jobCompany}
+            </span>
+            <span className="font-medium text-green-500">
+              Status: {activity?.status}
+            </span>
+            <span className="italic font-bold">
+              {activity?.jobId?.jobCompany}
+            </span>
+          </p>
+          <p className="flex justify-between items-center mt-2 text-sm text-gray-600">
+            <div className="flex flex-col mb-2">
+              <span>
+                Applied:
+                <span className="font-medium text-gray-700">
+                  {" " + formatDate(activity?.appliedAt)}
+                </span>
+              </span>
+
+              <span className="mt-2">
+                Updated At:
+                <span className="font-medium text-gray-700">
+                  {" " + formatDate(activity?.updatedAt)}
+                </span>
+              </span>
+            </div>
+          </p>
+          <button
+            onClick={() => navigate(`/findJobs/${activity?.jobId}`)}
+            className="text-blue-600 font-semibold hover:text-green-500 transition cursor-pointer"
+          >
+            Show Details &rarr;
+          </button>
+        </div>
+      ))}
     </div>
   );
 }
+
+//  {jobStatusUpdates &&
+// jobStatusUpdates.length > 0 &&
+
+// <div>
+// jobStatusUpdates.map((activity, indx) => (
+//   <div
+//     key={`saved-${indx}`}
+//     className="border border-gray-300 rounded-md p-4 shadow-sm hover:shadow-md transition duration-200"
+//   >
+//     <p className="text-gray-800 mb-2 flex flex-col">
+//       <span className="font-semibold">At:{activity.jobCompany}</span>
+//       <span className="font-medium text-green-500">
+//         Status: {activity.status}
+//       </span>
+//       <span className="italic font-bold">
+//         {activity.jobId.jobCompany}
+//       </span>
+//     </p>
+//     <p className="flex justify-between items-center mt-2 text-sm text-gray-600">
+//       <div className="flex flex-col mb-2">
+//         <span>
+//           Applied:
+//           <span className="font-medium text-gray-700">
+//             {formatDate(activity.appliedAt)}
+//           </span>
+//         </span>
+
+//         <span className="mt-2">
+//           Updated At:
+//           <span className="font-medium text-gray-700">
+//             {formatDate(activity.updatedAt)}
+//           </span>
+//         </span>
+//       </div>
+//     </p>
+//     <button
+//       onClick={() => navigate(`/findJobs/${activity?.jobId}`)}
+//       className="text-blue-600 font-semibold hover:text-green-500 transition"
+//     >
+//       Show Details &rarr;
+//     </button>
+//   </div>
+// ))}
+// </div>

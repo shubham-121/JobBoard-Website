@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import useGetTotalJobsPosted from "../Utils/custom hooks/Recruiter/useGetTotalJobsPosted";
 import useGetApplicants from "../Utils/custom hooks/Recruiter/useGetApplicants";
+import useShortlistedJobsCount from "../Utils/custom hooks/useShortlistedJobsCount";
 
 // 4 cards: saved, applied, etc.
 export default function DashboardCards({
@@ -12,7 +13,7 @@ export default function DashboardCards({
 }) {
   console.log(jobsApplied);
   const { authUserData } = useSelector((store) => store.authentication);
-  console.log(authUserData);
+  // console.log(authUserData);
 
   const { userRole, userId } = authUserData;
 
@@ -26,6 +27,7 @@ export default function DashboardCards({
           isLoadingAppliedJobs={isLoadingAppliedJobs}
           savedJobs={savedJobs}
           isLoadingSavedJobs={isLoadingSavedJobs}
+          userId={userId}
         />
       )}
     </div>
@@ -39,8 +41,13 @@ function JobSeekerCards({
   isLoadingAppliedJobs,
   savedJobs,
   isLoadingSavedJobs,
+  userId,
 }) {
   const navigate = useNavigate();
+
+  const { shortlistedJobsCount, loading } = useShortlistedJobsCount(userId);
+
+  // console.log("Shortlisted jobs count", shortlistedJobsCount?.count);
 
   // console.log(savedJobs?.savedJobs?.length);
 
@@ -90,10 +97,16 @@ function JobSeekerCards({
           <p className="text-3xl font-bold text-blue-600">Shortlisted Jobs</p>
         </div>
         <div>
-          <h3 className="font-semibold text-lg text-gray-800">-</h3>
+          <h3 className="font-semibold text-lg text-gray-800">
+            {shortlistedJobsCount?.count ? shortlistedJobsCount?.count : "-"}
+          </h3>
           <button
             className="text-sm text-blue-500 hover:underline cursor-pointer"
-            // onClick={() => navigate(routePath)}
+            onClick={() =>
+              navigate("/profile/shortlistedJobs", {
+                state: shortlistedJobsCount?.count,
+              })
+            }
           >
             View Details
           </button>

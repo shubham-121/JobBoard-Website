@@ -32,7 +32,7 @@ async function updateJobStatus(req, res) {
     });
 
     if (!statusChange || statusChange.length <= 0) {
-      return res.status(200).json({
+      return res.status(400).json({
         message: "Failed to update the job status of the user",
         status: "Failure",
         statusChange: statusChange,
@@ -52,7 +52,7 @@ async function updateJobStatus(req, res) {
       error.message
     );
 
-    return res.status(200).json({
+    return res.status(500).json({
       message: "Error occured while updating the job status",
       status: "Error",
     });

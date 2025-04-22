@@ -23,7 +23,7 @@ async function editRecruiterProfile(req, res) {
     headline,
   } = req.body;
 
-  console.log("Job recruiter resume", resume);
+  // console.log("Job recruiter resume", resume);
 
   const filter = {
     _id: userId,
@@ -56,7 +56,7 @@ async function editRecruiterProfile(req, res) {
       new: true,
     });
 
-    console.log("updated recuirter info;", updatedUser);
+    // console.log("updated recuirter info;", updatedUser);
 
     if (!updatedUser) {
       return res.status(400).json({

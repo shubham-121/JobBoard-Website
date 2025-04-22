@@ -1,11 +1,11 @@
-// get details of all the jobs applied by the user
+// get details of all the shortlisted jobs applied by the user
 const Applicant = require("../../../models/ApplicantSchema/applicantSchema");
 const mongoose = require("mongoose");
 
-async function getTotalAppliedJobs(req, res) {
+async function getTotalShortlistedJobs(req, res) {
   const { userId } = req.params;
 
-  // console.log("getTotalAppliedJobs:", userId);
+  // console.log("getTotalShortlistedJobs:", userId);
 
   if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({
@@ -15,22 +15,29 @@ async function getTotalAppliedJobs(req, res) {
   }
 
   try {
-    const appliedJobs = await Applicant.find({ applicantId: userId });
+    const shortlistedJobs = await Applicant.find({
+      applicantId: userId,
+      status: { $in: ["Selected", "Shortlisted", "Reviewed"] },
+    });
 
-    if (!appliedJobs || appliedJobs.length <= 0) {
+    console.log("Shortlisted job:", shortlistedJobs);
+    console.log("Shortlisted job:", shortlistedJobs.length);
+
+    if (!shortlistedJobs || shortlistedJobs.length <= 0) {
       return res.status(200).json({
         message: "No jobs found for the logged in user",
         status: "NotFound",
-        appliedJobs: appliedJobs,
+        shortlistedJobs: shortlistedJobs,
       });
     }
 
-    // console.log("All jobs applied by the user: ", appliedJobs);
+    // console.log("All jobs applied by the user: ", shortlistedJobs);
 
     return res.status(200).json({
       message: "All jobs found for the logged in user",
       status: "Success",
-      appliedJobs: appliedJobs,
+      count: shortlistedJobs.length,
+      shortlistedJobs: shortlistedJobs,
     });
   } catch (error) {
     console.error("Error:", error.message);
@@ -42,4 +49,4 @@ async function getTotalAppliedJobs(req, res) {
   }
 }
 
-module.exports = getTotalAppliedJobs;
+module.exports = getTotalShortlistedJobs;

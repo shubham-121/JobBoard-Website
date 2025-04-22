@@ -18,7 +18,7 @@ async function checkJobSaved(req, res) {
     });
   }
 
-  console.log("Job exists?", alreadyExists);
+  // console.log("Job exists?", alreadyExists);
 
   return res
     .status(200)

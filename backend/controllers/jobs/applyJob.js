@@ -8,7 +8,7 @@ async function applyJob(req, res) {
   const { jobId, applicantId, recruiterId, jobTitle, jobCompany, resumeUrl } =
     body;
 
-  console.log("Job applicant apply data", body);
+  // console.log("Job applicant apply data", body);
 
   if (
     !jobId ||
@@ -32,7 +32,7 @@ async function applyJob(req, res) {
   });
 
   if (alreadyApplied) {
-    console.log("User  already applied to the job:", alreadyApplied);
+    // console.log("User  already applied to the job:", alreadyApplied);
 
     return res.status(200).json({
       message: "User already has applied to the job",
@@ -59,7 +59,7 @@ async function applyJob(req, res) {
       });
     }
 
-    console.log("Successfully applied to the job: ", newApplication);
+    // console.log("Successfully applied to the job: ", newApplication);
 
     return res.status(200).json({
       message: "You have successfully applied to the job",

@@ -19,7 +19,7 @@ async function unsaveJob(req, res) {
     });
   }
 
-  console.log("Save job exist", jobExist);
+  // console.log("Save job exist", jobExist);
 
   //2- delete the saved job if present
   const deleteSavedJob = await SavedJobs.deleteOne({ userId, jobId });
@@ -33,7 +33,7 @@ async function unsaveJob(req, res) {
     });
   }
 
-  console.log("Successfuly deleted the saved job", deleteSavedJob);
+  // console.log("Successfuly deleted the saved job", deleteSavedJob);
 
   return res.status(200).json({
     message: "Successfully deleted the saved job from the DB",

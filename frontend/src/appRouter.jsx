@@ -15,6 +15,7 @@ import TotalApplicantsReceived from "./components/Profile/DashBoard Cards/Recrui
 import ApplicantFullProfile from "./components/Profile/DashBoard Cards/Recruiter/ApplicantFullProfile";
 import EditRecruiterProfile from "./components/Profile/EditProfile/Recruiter/EditRecruiterProfile";
 import EditJobSeekerProfile from "./components/Profile/EditProfile/JobSeeker/EditJobSeekerProfile";
+import TotalShortlistedJobs from "./components/Profile/DashBoard Cards/JobSeeker/TotalShortlistedJobs";
 
 const router = createBrowserRouter([
   {
@@ -43,17 +44,6 @@ const router = createBrowserRouter([
       //   <Profile></Profile>
       // </ProtectedRoute>
     ),
-  },
-
-  //only for job seeker
-  {
-    path: "/profile/appliedJobs",
-    element: <TotalAppliedJobs></TotalAppliedJobs>, //protected route
-  },
-
-  {
-    path: "/profile/savedJobs",
-    element: <TotalSavedJobs></TotalSavedJobs>, //protected route
   },
 
   //only for recruiter
@@ -106,6 +96,22 @@ const router = createBrowserRouter([
   {
     path: "/findJobs/:jobId",
     element: <JobDetails></JobDetails>,
+  },
+
+  //only for job seeker
+  {
+    path: "/profile/appliedJobs",
+    element: <TotalAppliedJobs></TotalAppliedJobs>, //protected route
+  },
+
+  {
+    path: "/profile/savedJobs",
+    element: <TotalSavedJobs></TotalSavedJobs>, //protected route
+  },
+
+  {
+    path: "/profile/shortlistedJobs",
+    element: <TotalShortlistedJobs></TotalShortlistedJobs>,
   },
 ]);
 

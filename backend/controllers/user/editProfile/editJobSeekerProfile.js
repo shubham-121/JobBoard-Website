@@ -7,7 +7,7 @@ async function editJobSeekerProfile(req, res) {
   //prettier-ignore
   const {name,email,phone,location,skills,linkedin,company,experince,institute,degree,headline,resume} = body;
 
-  console.log("Edit profile route for job seeker", userId, body);
+  // console.log("Edit profile route for job seeker", userId, body);
 
   if (!body) {
     return res.status(400).json({
@@ -45,7 +45,7 @@ async function editJobSeekerProfile(req, res) {
       new: true,
     });
 
-    console.log("Updated user profile:", updatedUser);
+    // console.log("Updated user profile:", updatedUser);
 
     if (!updatedUser) {
       return res.status(400).json({
