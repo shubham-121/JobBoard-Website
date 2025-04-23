@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 const hashPassword = require("../../utils/hashpswd.js");
 const userSignup = require("./signup.js");
 
+const nodeMailerWelcome = require("../nodemailer/nodeMailerWelcome.js");
+
 require("dotenv").config();
 
 async function loginUser(req, res) {
@@ -58,6 +60,9 @@ async function loginUser(req, res) {
     });
 
     console.log("jwt token for logged in user", jwt_token);
+
+    //send a notify mail
+    nodeMailerWelcome(email);
 
     // 3-send response to frontend
     return res.status(200).json({

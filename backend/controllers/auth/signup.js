@@ -1,6 +1,8 @@
 const UserSignup = require("../../models/UserSchema/userSignup.js"); //users collection
 const jwt = require("jsonwebtoken");
 const hashPassword = require("../../utils/hashpswd.js");
+const nodeMailerWelcome = require("../nodemailer/nodeMailerWelcome.js");
+
 require("dotenv").config();
 
 async function userSignup(req, res) {
@@ -65,6 +67,9 @@ async function userSignup(req, res) {
     const jwt_token = jwt.sign(user, process.env.JWT_Access_TOKEN);
 
     console.log("jwt token for new created user", jwt_token);
+
+    //send a welcome mail also to the user
+    nodeMailerWelcome(email, (newuser = true));
 
     // 3-send response to frontend
     return res.status(200).json({

@@ -3,8 +3,11 @@
 const Applicant = require("../../../models/ApplicantSchema/applicantSchema");
 const Jobs = require("../../../models/jobs/jobSchema");
 const mongoose = require("mongoose");
+const nodeMailerStatusUpdate = require("../../nodemailer/nodeMailerStatusUpdate");
 
 async function updateJobStatus(req, res) {
+  const { email: userEmail } = req.user; //for sending the job status update mail
+
   const { jobId, applicantId } = req.params;
   const { status } = req.body;
 
@@ -29,7 +32,7 @@ async function updateJobStatus(req, res) {
     const updateValue = { status: status };
     const statusChange = await Applicant.findOneAndUpdate(filter, updateValue, {
       new: true,
-    });
+    }).populate("applicantId", { userEmail: 1 });
 
     if (!statusChange || statusChange.length <= 0) {
       return res.status(400).json({
@@ -39,7 +42,18 @@ async function updateJobStatus(req, res) {
       });
     }
 
-    console.log("Job status updated: ", statusChange);
+    console.log(
+      "Job status updated: ",
+      statusChange
+      // statusChange?.applicantId?.userEmail
+    );
+
+    nodeMailerStatusUpdate(
+      statusChange?.applicantId?.userEmail,
+      statusChange.jobCompany,
+      statusChange.jobTitle,
+      statusChange.status
+    );
 
     return res.status(200).json({
       message: "Job status of the user updated",
