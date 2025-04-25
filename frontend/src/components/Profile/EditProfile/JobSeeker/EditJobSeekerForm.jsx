@@ -1,3 +1,5 @@
+import AddProfessionalDetails from "./AddProfessionalDetails";
+
 export default function EditJobSeekerForm({
   formData,
   handleFormChange,
@@ -244,6 +246,9 @@ export default function EditJobSeekerForm({
           </div>
         )}
       </div>
+
+      {/* Render here */}
+      <AddProfessionalDetails></AddProfessionalDetails>
 
       {/* Save Button */}
       <div className="flex justify-center">

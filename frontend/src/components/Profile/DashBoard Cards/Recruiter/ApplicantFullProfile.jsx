@@ -1,10 +1,13 @@
 import { useLocation, useNavigate } from "react-router";
 import useGetApplicantProfile from "../../../Utils/custom hooks/Recruiter/useGetApplicantProfile";
 import LoadingIndicator from "../../../Utils/LoadingIndicator";
+import UserImg from "../../../../images/user/avatar.avif";
 export default function ApplicantFullProfile() {
   const navigate = useNavigate();
   const { state: userId } = useLocation();
   const { applicantData, isLoadingApplicant } = useGetApplicantProfile(userId);
+
+  console.log("user view profile route:", applicantData);
 
   return (
     <div className="p-4 sm:p-6 md:p-10 flex flex-col gap-8 bg-gray-300 min-h-screen">
@@ -20,8 +23,17 @@ export default function ApplicantFullProfile() {
         <LoadingIndicator />
       ) : (
         <div className="flex flex-col space-y-5">
-          {/* About Section */}
-          <AboutApplicant applicantData={applicantData} />
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 jus">
+            <div className="flex justify-center items-center">
+              <img
+                src={UserImg}
+                alt="Applicant"
+                className="w-92 sm:w-32 h-80 sm:h-32 rounded-2xl object-contain"
+              />
+            </div>
+            {/* About Section */}
+            <AboutApplicant applicantData={applicantData} />
+          </div>
 
           {/* Details Section */}
           <ApplicantDetails applicantData={applicantData} />
@@ -33,7 +45,7 @@ export default function ApplicantFullProfile() {
 
 function AboutApplicant({ applicantData }) {
   return (
-    <div className="bg-white p-6 rounded-md shadow flex flex-col gap-2">
+    <div className="bg-white p-6 rounded-md shadow flex flex-col gap-2 w-auto">
       <h1 className="text-2xl font-bold text-gray-800">About Applicant</h1>
       <p className="text-gray-700">
         A full MERN stack developer, with 5 years of experience in Backend
@@ -53,9 +65,16 @@ function ApplicantDetails({ applicantData }) {
         <Details label="Phone Number:" value={applicantData?.userPhoneNumber} />
         <Details label="Role:" value={applicantData?.userRole} />
         <Details label="Location:" value={applicantData?.userCity} />
-        <Details label="Skills:" value={applicantData?.skills} />
-        <Details label="Resume:" value={"??Show resume link here??"} />
-        <Details label="LinkedIn:" value={applicantData?.linkedIn} />
+        <Details label="Skills:" value={applicantData?.userSkills.join(", ")} />
+        {/* <Details label="Resume:" value={"??Show resume link here??"} /> */}
+        <RenderLinks
+          link={applicantData?.userSocial}
+          name={"User Social"}
+        ></RenderLinks>
+        <RenderLinks
+          link={applicantData?.RenderLinks}
+          name={"Resume"}
+        ></RenderLinks>
       </div>
 
       {/* Experience Section */}
@@ -88,6 +107,26 @@ function SectionBlock({ title, content }) {
     <div className="bg-white p-6 rounded-md shadow flex flex-col gap-2 w-full overflow-x-auto">
       <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
       <p className="text-gray-700 whitespace-pre-wrap">{content || "—"}</p>
+    </div>
+  );
+}
+
+function RenderLinks({ link, name }) {
+  return (
+    <div className="flex flex-col sm:flex-row w-full sm:w-[47%] items-start gap-1 sm:gap-3 bg-amber-50 p-4 rounded-md shadow-sm hover:shadow-md transition-shadow duration-200">
+      <span className="font-semibold text-gray-800 text-lg min-w-[100px]">
+        {name}:
+      </span>
+      <span className="text-gray-800 break-words text-lg font-semibold overflow-auto max-h-40">
+        <a
+          href={link || ""}
+          target="_blank"
+          className="text-blue-600 hover:cursor-pointer active:text-green-500"
+        >
+          Show {name}
+        </a>
+        {/* {resume || "—"} */}
+      </span>
     </div>
   );
 }
