@@ -1,16 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useGetApplicantProfile from "../../../../Utils/custom hooks/Recruiter/useGetApplicantProfile";
+import beautifyString from "../../../../Utils/beautifyString";
 
 export default function AddEducation({
   professionalData,
   setProfessionalData,
   setIsClicked,
   isClicked,
+  userId,
 }) {
   const [education, setEducation] = useState({
     instituteName: "",
     degreeName: "",
     educationDuration: "",
   });
+
+  //prefill the edit form
+  const { applicantData, isLoadingApplicant } = useGetApplicantProfile(userId);
+
+  // const [professionalData, setProfessionalData] = useState({
+  //   experince: [],
+  //   projects: [],
+  //   education: [],
+  // });
+
+  useEffect(() => {
+    if (
+      applicantData &&
+      (!professionalData.education || professionalData.education.length === 0)
+    ) {
+      setProfessionalData((prevData) => ({
+        ...prevData,
+        education:
+          applicantData?.userEducation?.map((edu) => ({
+            instituteName: beautifyString(edu?.instituteName) || "",
+            degreeName: beautifyString(edu?.degree) || "",
+            educationDuration: beautifyString(edu?.duration) || "",
+          })) || [],
+      }));
+    }
+  }, [applicantData, setProfessionalData, professionalData.education]);
 
   function handleEducationChange(e) {
     const { name, value } = e.target;
@@ -66,7 +95,7 @@ export default function AddEducation({
                 {/* Left content */}
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                    Experience {idx + 1}:
+                    Education {idx + 1}:
                   </h3>
                   <p className="text-lg text-gray-700 font-semibold">
                     <span className="font-semibold">Institute:</span>{" "}

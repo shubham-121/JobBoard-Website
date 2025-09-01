@@ -4,18 +4,49 @@ async function editJobSeekerProfile(req, res) {
   const { userId } = req.params;
   const body = req.body;
 
-  //prettier-ignore
-  const {name,email,phone,location,skills,linkedin,company,experince,institute,degree,headline,resume} = body;
+  console.log("Edit profile form:", body);
 
-  // console.log("Edit profile route for job seeker", userId, body);
-
-  if (!body) {
+  if (!userId) {
     return res.status(400).json({
-      message: "Error occured due to missing form body",
+      message: "User ID is missing from request parameters",
       status: "Error",
-      body: body,
     });
   }
+
+  //prettier-ignore
+  const {
+    name,
+    email,
+    phone,
+    location,
+    skills,
+    linkedin,
+    company,
+    experince,
+    institute,
+    degree,
+    headline,
+    resume,
+    professionalData,
+  } = body;
+
+  //extract user previous professional data like experince,projects,education
+  const { experince: prevExperince, projects, education } = professionalData;
+
+  console.log("Experince:", prevExperince);
+
+  console.log("projects:", projects);
+
+  console.log("education:", education);
+  // console.log("Edit profile route for job seeker", userId, body);
+
+  // if (!body) {
+  //   return res.status(400).json({
+  //     message: "Error occured due to missing form body",
+  //     status: "Error",
+  //     body: body,
+  //   });
+  // }
 
   const filter = { _id: userId };
   const updateData = {
@@ -30,16 +61,31 @@ async function editJobSeekerProfile(req, res) {
     userHeadline: headline,
     userResume: resume,
 
-    userExperience: {
-      companyName: company,
-      yoe: experince,
-    },
+    userExperience: Array.isArray(prevExperince)
+      ? prevExperince.map((exp, i) => ({
+          companyName: exp.organisation,
+          jobTitle: exp.position,
+          yoe: exp.duration,
+        }))
+      : [],
 
-    userEducation: {
-      instituteName: institute,
-      degree: degree,
-    },
+    userEducation: Array.isArray(education)
+      ? education.map((edu, i) => ({
+          instituteName: edu.instituteName,
+          degree: edu.degreeName,
+          duration: edu.educationDuration,
+        }))
+      : [],
+
+    userProjects: Array.isArray(projects)
+      ? projects.map((proj, i) => ({
+          projectName: proj.projectName,
+          description: proj.projectInfo,
+          duration: proj.projectDuration,
+        }))
+      : [],
   };
+
   try {
     const updatedUser = await Users.findByIdAndUpdate(filter, updateData, {
       new: true,
@@ -51,6 +97,7 @@ async function editJobSeekerProfile(req, res) {
       return res.status(400).json({
         message: "Failed to update the user Profile",
         status: "Failure",
+        updatedUser: updatedUser,
       });
     }
 
@@ -62,7 +109,7 @@ async function editJobSeekerProfile(req, res) {
   } catch (err) {
     console.error("Error:", err);
 
-    return res.status(400).json({
+    return res.status(500).json({
       message: "Error while updating the user Profile",
       status: "Error",
     });
@@ -70,5 +117,3 @@ async function editJobSeekerProfile(req, res) {
 }
 
 module.exports = editJobSeekerProfile;
-
-//tomorrow task-> data is updating correctly, render data in frotend

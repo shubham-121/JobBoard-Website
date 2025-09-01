@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddExperince from "./ProfessionalDetails/AddExperince";
 import AddProjects from "./ProfessionalDetails/AddProjects";
 import AddEducation from "./ProfessionalDetails/AddEducation";
+import useGetApplicantProfile from "../../../Utils/custom hooks/Recruiter/useGetApplicantProfile";
 
-export default function AddProfessionalDetails() {
+export default function AddProfessionalDetails({
+  professionalData,
+  setProfessionalData,
+  userId,
+}) {
   const [isClicked, setIsClicked] = useState({
     experince: false,
     projects: false,
@@ -12,11 +17,11 @@ export default function AddProfessionalDetails() {
 
   //   const [experinces, setExperinces] = useState(null);
 
-  const [professionalData, setProfessionalData] = useState({
-    experince: [],
-    projects: [],
-    education: [],
-  });
+  // const [professionalData, setProfessionalData] = useState({
+  //   experince: [],
+  //   projects: [],
+  //   education: [],
+  // });
 
   return (
     <div className=" flex flex-col  space-y-4">
@@ -43,6 +48,7 @@ export default function AddProfessionalDetails() {
           setProfessionalData={setProfessionalData}
           setIsClicked={setIsClicked}
           isClicked={isClicked}
+          userId={userId}
         ></AddExperince>
       )}
 
@@ -70,6 +76,7 @@ export default function AddProfessionalDetails() {
           setProfessionalData={setProfessionalData}
           setIsClicked={setIsClicked}
           isClicked={isClicked}
+          userId={userId}
         ></AddProjects>
       )}
 
@@ -97,6 +104,7 @@ export default function AddProfessionalDetails() {
           setProfessionalData={setProfessionalData}
           setIsClicked={setIsClicked}
           isClicked={isClicked}
+          userId={userId}
         ></AddEducation>
       )}
     </div>

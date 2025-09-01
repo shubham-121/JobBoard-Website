@@ -64,12 +64,15 @@ const userSignupSchema = new mongoose.Schema(
       },
     ],
 
-    userEducation: {
-      instituteName: { type: String },
-      from: { type: Date },
-      to: { type: Date },
-      degree: { type: String },
-    },
+    userEducation: [
+      {
+        instituteName: { type: String },
+        from: { type: Date },
+        to: { type: Date },
+        degree: { type: String },
+        duration: { type: String },
+      },
+    ],
 
     userProjects: [
       {
@@ -80,6 +83,7 @@ const userSignupSchema = new mongoose.Schema(
         endDate: { type: Date }, // Optional, because some projects might be ongoing
         role: { type: String },
         link: { type: String },
+        duration: { type: String },
       },
     ],
 

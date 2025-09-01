@@ -23,6 +23,7 @@ export default function EditForm() {
 
   const { applicantData, isLoadingApplicant } = useGetApplicantProfile(userId);
 
+  //for normal form data
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -34,6 +35,13 @@ export default function EditForm() {
     experince: "",
     institute: "",
     degree: "",
+  });
+
+  //for user exp,project,education
+  const [professionalData, setProfessionalData] = useState({
+    experince: [],
+    projects: [],
+    education: [],
   });
 
   const [userUpdatedProfile, setUserUpdatedProfile] = useState(null); //for handling the updated user profile after user updates his profile
@@ -137,6 +145,8 @@ export default function EditForm() {
     }
   }
 
+  console.log("Professional data, EditForm route:", professionalData);
+
   async function handleSaveChanges(e) {
     e.preventDefault();
 
@@ -146,9 +156,10 @@ export default function EditForm() {
       ...formData,
       skills: formData.skills.split(",").map((skill) => skill.trim()),
       resume: resumeLink,
+      professionalData: professionalData,
     };
 
-    console.log(finalData);
+    console.log("Final data after submitting the form:", finalData);
 
     try {
       const data = await fetchRequest(
@@ -196,6 +207,8 @@ export default function EditForm() {
       <EditJobSeekerForm
         formData={formData}
         handleFormChange={handleFormChange}
+        professionalData={professionalData}
+        setProfessionalData={setProfessionalData}
         handleFileChange={handleFileChange}
         handleResumeUpload={handleResumeUpload}
         handleSaveChanges={handleSaveChanges}
@@ -203,6 +216,7 @@ export default function EditForm() {
         isResumeUploading={isResumeUploading}
         file={file}
         resumeLink={resumeLink}
+        userId={userId}
       ></EditJobSeekerForm>
     </>
   );

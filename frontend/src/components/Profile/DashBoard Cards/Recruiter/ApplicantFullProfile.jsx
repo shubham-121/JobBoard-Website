@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router";
 import useGetApplicantProfile from "../../../Utils/custom hooks/Recruiter/useGetApplicantProfile";
 import LoadingIndicator from "../../../Utils/LoadingIndicator";
 import UserImg from "../../../../images/user/avatar.avif";
+import beautifyString from "../../../Utils/beautifyString";
 export default function ApplicantFullProfile() {
   const navigate = useNavigate();
   const { state: userId } = useLocation();
@@ -22,22 +23,25 @@ export default function ApplicantFullProfile() {
       {isLoadingApplicant ? (
         <LoadingIndicator />
       ) : (
-        <div className="flex flex-col space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4 jus">
-            <div className="flex justify-center items-center">
-              <img
-                src={UserImg}
-                alt="Applicant"
-                className="w-92 sm:w-32 h-80 sm:h-32 rounded-2xl object-contain"
-              />
+        applicantData && (
+          <div className="flex flex-col space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 jus">
+              <div className="flex justify-center items-center">
+                <img
+                  src={UserImg}
+                  alt="Applicant"
+                  className="w-92 sm:w-32 h-80 sm:h-32 rounded-2xl object-contain"
+                />
+              </div>
+              {/* About Section */}
+              <AboutApplicant applicantData={applicantData} />
             </div>
-            {/* About Section */}
-            <AboutApplicant applicantData={applicantData} />
-          </div>
 
-          {/* Details Section */}
-          <ApplicantDetails applicantData={applicantData} />
-        </div>
+            {/* Details Section */}
+
+            <ApplicantDetails applicantData={applicantData} />
+          </div>
+        )
       )}
     </div>
   );
@@ -48,14 +52,17 @@ function AboutApplicant({ applicantData }) {
     <div className="bg-white p-6 rounded-md shadow flex flex-col gap-2 w-auto">
       <h1 className="text-2xl font-bold text-gray-800">About Applicant</h1>
       <p className="text-gray-700">
-        A full MERN stack developer, with 5 years of experience in Backend
-        technology and DevOps.
+        {applicantData?.userHeadline
+          ? beautifyString(applicantData?.userHeadline)
+          : applicantData?.userHeadline}
       </p>
     </div>
   );
 }
 
 function ApplicantDetails({ applicantData }) {
+  const { userEducation, userExperience, userProjects } = applicantData;
+
   return (
     <div className="flex flex-col gap-8">
       {/* Basic Info Section */}
@@ -72,41 +79,167 @@ function ApplicantDetails({ applicantData }) {
           name={"User Social"}
         ></RenderLinks>
         <RenderLinks
-          link={applicantData?.RenderLinks}
+          link={applicantData?.userResume}
           name={"Resume"}
         ></RenderLinks>
       </div>
 
       {/* Experience Section */}
-      <SectionBlock title="Experience" content={applicantData?.experince} />
-
+      <RenderExperience userExperience={userExperience}></RenderExperience>
       {/* Projects Section */}
-      <SectionBlock title="Projects" content={applicantData?.projects} />
-
+      <RenderProjects userProjects={userProjects}></RenderProjects>
       {/* Education Section */}
-      <SectionBlock title="Education" content={applicantData?.education} />
+      <RenderEducation userEducation={userEducation}></RenderEducation>
     </div>
   );
 }
 
-function Details({ label, value }) {
+function RenderExperience({ userExperience }) {
+  // console.log("User experience:", userExperience);
   return (
-    <div className="flex flex-col sm:flex-row w-full sm:w-[47%] items-start gap-1 sm:gap-3 bg-amber-50 p-4 rounded-md shadow-sm hover:shadow-md transition-shadow duration-200">
-      <span className="font-semibold text-gray-800 text-lg min-w-[100px]">
-        {label}
-      </span>
-      <span className="text-gray-800 break-words text-lg font-semibold overflow-auto max-h-40">
-        {value || "—"}
-      </span>
+    <div className="bg-white p-6 rounded-md shadow flex flex-col gap-6 w-full overflow-x-auto">
+      <h2 className="text-2xl font-bold text-gray-800 border-b pb-2 mb-6">
+        Experience
+      </h2>
+
+      <div className="flex flex-col gap-4">
+        {userExperience.map((exp, indx) => (
+          <div
+            key={indx}
+            className="border border-gray-300 p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 bg-gray-50 flex flex-col sm:flex-row sm:items-center sm:justify-between"
+          >
+            {/* Company Name */}
+            <div className="flex flex-col sm:w-1/3 mb-2 sm:mb-0">
+              <span className="text-xs uppercase tracking-wider text-gray-500">
+                Company
+              </span>
+              <span className="text-lg font-bold text-gray-800">
+                {exp.companyName}
+              </span>
+            </div>
+
+            {/* Duration */}
+            <div className="flex flex-col sm:w-1/3 mb-2 sm:mb-0">
+              <span className="text-xs uppercase tracking-wider text-gray-500">
+                Duration
+              </span>
+              <span className="text-md font-semibold text-gray-700">
+                {exp.yoe}
+              </span>
+            </div>
+
+            {/* Position */}
+            <div className="flex flex-col sm:w-1/3">
+              <span className="text-xs uppercase tracking-wider text-gray-500">
+                Position
+              </span>
+              <span className="text-md font-semibold text-gray-700">
+                {exp.jobTitle}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
-function SectionBlock({ title, content }) {
+function RenderProjects({ userProjects }) {
+  // console.log("Usser projects", userProjects);
   return (
-    <div className="bg-white p-6 rounded-md shadow flex flex-col gap-2 w-full overflow-x-auto">
-      <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
-      <p className="text-gray-700 whitespace-pre-wrap">{content || "—"}</p>
+    <div className="bg-white p-6 rounded-md shadow flex flex-col gap-6 w-full overflow-x-auto">
+      <h2 className="text-2xl font-bold text-gray-800 border-b pb-2 mb-6">
+        Experience
+      </h2>
+
+      <div className="flex flex-col gap-4">
+        {userProjects.map((proj, indx) => (
+          <div
+            key={indx}
+            className="border border-gray-300 p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 bg-gray-50 flex flex-col sm:flex-row sm:items-center sm:justify-between"
+          >
+            {/* Company Name */}
+            <div className="flex flex-col sm:w-1/3 mb-2 sm:mb-0">
+              <span className="text-xs uppercase tracking-wider text-gray-500">
+                Project Name
+              </span>
+              <span className="text-lg font-bold text-gray-800">
+                {proj.projectName}
+              </span>
+            </div>
+
+            {/* Duration */}
+            <div className="flex flex-col sm:w-1/3 mb-2 sm:mb-0">
+              <span className="text-xs uppercase tracking-wider text-gray-500">
+                Project Description
+              </span>
+              <span className="text-md font-semibold text-gray-700">
+                {proj.description}
+              </span>
+            </div>
+
+            {/* Position */}
+            <div className="flex flex-col sm:w-1/3">
+              <span className="text-xs uppercase tracking-wider text-gray-500">
+                Duration
+              </span>
+              <span className="text-md font-semibold text-gray-700">
+                {proj.duration}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RenderEducation({ userEducation }) {
+  // console.log("User education:", userEducation);
+  return (
+    <div className="bg-white p-6 rounded-md shadow flex flex-col gap-6 w-full overflow-x-auto">
+      <h2 className="text-2xl font-bold text-gray-800 border-b pb-2 mb-6">
+        Experience
+      </h2>
+
+      <div className="flex flex-col gap-4">
+        {userEducation.map((edu, indx) => (
+          <div
+            key={indx}
+            className="border border-gray-300 p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 bg-gray-50 flex flex-col sm:flex-row sm:items-center sm:justify-between"
+          >
+            {/* Company Name */}
+            <div className="flex flex-col sm:w-1/3 mb-2 sm:mb-0">
+              <span className="text-xs uppercase tracking-wider text-gray-500">
+                Institute Name
+              </span>
+              <span className="text-lg font-bold text-gray-800">
+                {edu.instituteName}
+              </span>
+            </div>
+
+            {/* Duration */}
+            <div className="flex flex-col sm:w-1/3 mb-2 sm:mb-0">
+              <span className="text-xs uppercase tracking-wider text-gray-500">
+                Degree Name
+              </span>
+              <span className="text-md font-semibold text-gray-700">
+                {edu.degree}
+              </span>
+            </div>
+
+            {/* Position */}
+            <div className="flex flex-col sm:w-1/3">
+              <span className="text-xs uppercase tracking-wider text-gray-500">
+                From - To
+              </span>
+              <span className="text-md font-semibold text-gray-700">
+                {edu.duration}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -126,6 +259,19 @@ function RenderLinks({ link, name }) {
           Show {name}
         </a>
         {/* {resume || "—"} */}
+      </span>
+    </div>
+  );
+}
+
+function Details({ label, value }) {
+  return (
+    <div className="flex flex-col sm:flex-row w-full sm:w-[47%] items-start gap-1 sm:gap-3 bg-amber-50 p-4 rounded-md shadow-sm hover:shadow-md transition-shadow duration-200">
+      <span className="font-semibold text-gray-800 text-lg min-w-[100px]">
+        {label}
+      </span>
+      <span className="text-gray-800 break-words text-lg font-semibold overflow-auto max-h-40">
+        {value || "—"}
       </span>
     </div>
   );

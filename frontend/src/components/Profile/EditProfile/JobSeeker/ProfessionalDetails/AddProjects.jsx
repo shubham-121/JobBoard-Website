@@ -1,16 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useGetApplicantProfile from "../../../../Utils/custom hooks/Recruiter/useGetApplicantProfile";
+import beautifyString from "../../../../Utils/beautifyString";
 
 export default function AddProjects({
   professionalData,
   setProfessionalData,
   setIsClicked,
   isClicked,
+  userId,
 }) {
   const [project, setProject] = useState({
     projectName: "",
     projectInfo: "",
     projectDuration: "",
   });
+
+  //prefill the edit form
+  const { applicantData, isLoadingApplicant } = useGetApplicantProfile(userId);
+
+  // const [professionalData, setProfessionalData] = useState({
+  //   experince: [],
+  //   projects: [],
+  //   education: [],
+  // });
+
+  useEffect(() => {
+    if (
+      applicantData &&
+      (!professionalData.projects || professionalData.projects.length === 0)
+    ) {
+      setProfessionalData((prevData) => ({
+        ...prevData,
+        projects:
+          applicantData?.userProjects?.map((proj) => ({
+            projectName: beautifyString(proj?.projectName) || "",
+            projectInfo: beautifyString(proj?.description) || "",
+            projectDuration: beautifyString(proj?.duration) || "",
+          })) || [],
+      }));
+    }
+  }, [applicantData, setProfessionalData, professionalData.projects]);
 
   function handleProjectChange(e) {
     const { name, value } = e.target;
@@ -66,7 +95,7 @@ export default function AddProjects({
                 {/* Left content */}
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                    Experience {idx + 1}:
+                    Project {idx + 1}:
                   </h3>
                   <p className="text-lg text-gray-700 font-semibold">
                     <span className="font-semibold">Project Name:</span>{" "}

@@ -3,6 +3,8 @@ import AddProfessionalDetails from "./AddProfessionalDetails";
 export default function EditJobSeekerForm({
   formData,
   handleFormChange,
+  professionalData,
+  setProfessionalData,
   handleFileChange,
   handleResumeUpload,
   handleSaveChanges,
@@ -10,6 +12,7 @@ export default function EditJobSeekerForm({
   isResumeUploading,
   file,
   resumeLink,
+  userId,
 }) {
   return (
     <div className="w-full md:w-2/3 bg-white p-6 rounded-lg shadow-md space-y-6">
@@ -111,7 +114,7 @@ export default function EditJobSeekerForm({
       <div className="flex flex-col sm:flex-row gap-6">
         <div className="flex flex-col w-full">
           <label className="text-sm font-medium text-gray-700 mb-1">
-            Experience (In years)
+            Total Experience (In years)
           </label>
           <input
             name="experince"
@@ -124,7 +127,7 @@ export default function EditJobSeekerForm({
         </div>
         <div className="flex flex-col w-full">
           <label className="text-sm font-medium text-gray-700 mb-1">
-            Company
+            Current Company
           </label>
           <input
             name="company"
@@ -248,7 +251,11 @@ export default function EditJobSeekerForm({
       </div>
 
       {/* Render here */}
-      <AddProfessionalDetails></AddProfessionalDetails>
+      <AddProfessionalDetails
+        professionalData={professionalData}
+        setProfessionalData={setProfessionalData}
+        userId={userId}
+      ></AddProfessionalDetails>
 
       {/* Save Button */}
       <div className="flex justify-center">

@@ -1,15 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useGetApplicantProfile from "../../../../Utils/custom hooks/Recruiter/useGetApplicantProfile";
+import beautifyString from "../../../../Utils/beautifyString";
 
 export default function AddExperince({
   professionalData,
   setProfessionalData,
   setIsClicked,
+  userId,
 }) {
   const [experince, setExperince] = useState({
     organisation: "",
     position: "",
     duration: "",
   });
+
+  const { applicantData, isLoadingApplicant } = useGetApplicantProfile(userId);
+
+  // const [professionalData, setProfessionalData] = useState({
+  //   experince: [],
+  //   projects: [],
+  //   education: [],
+  // });
+
+  useEffect(() => {
+    if (
+      applicantData &&
+      (!professionalData.experince || professionalData.experince.length === 0)
+    ) {
+      setProfessionalData((prevData) => ({
+        ...prevData,
+        experince:
+          applicantData?.userExperience?.map((exp) => ({
+            organisation: beautifyString(exp?.companyName) || "",
+            duration: beautifyString(exp?.yoe) || "",
+            position: beautifyString(exp?.jobTitle) || "",
+          })) || [],
+      }));
+    }
+  }, [applicantData, setProfessionalData, professionalData.experince]);
+
   function handleExperinceChange(e) {
     const { name, value } = e.target;
 
